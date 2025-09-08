@@ -2,11 +2,18 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>DỰ TÍNH THU NHẬP – Hương Lê PMH</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DỰ TÍNH THU NHẬP – HƯƠNG LÊ PMH</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit-cover" />
+  
+  <!-- Logo và Favicon -->
+  <link rel="icon" type="image/webp" href="../logo.webp" />
+  <link rel="apple-touch-icon" href="../logo.webp" />
+  <meta name="msapplication-TileImage" content="../logo.webp" />
+  <meta property="og:image" content="../logo.webp" />
+  <meta name="twitter:image" content="../logo.webp" />
 
   <!-- Font của dự án -->
-  <link rel="stylesheet" href="fonts/fonts.css" />
+  <link rel="stylesheet" href="../fonts.css" />
   <!-- Tailwind (chỉ dùng utility nhỏ) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -18,6 +25,27 @@
       --toc-h: 0px;          /* chiều cao dropdown mobile (tự tính bằng JS) */
       --brand:#059669; 
       --accent:#00a758;
+      
+      /* Tùy biến responsive cho tất cả thiết bị */
+      --mobile-breakpoint: 1023px;
+      --tablet-breakpoint: 768px;
+      --small-mobile: 480px;
+      --large-desktop: 1440px;
+      
+      /* Tùy biến spacing */
+      --safe-area-top: env(safe-area-inset-top, 0px);
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-area-left: env(safe-area-inset-left, 0px);
+      --safe-area-right: env(safe-area-inset-right, 0px);
+      
+      /* Tùy biến z-index */
+      --z-header: 1000;
+      --z-banner: 999;
+      --z-toc: 996;
+      --z-content: 1;
+      --z-footer: 950;
+      --z-support: 940;
+      --z-loading: 10000;
     }
     /* đảm bảo không tràn ngang trên mọi thiết bị */
     html,body{height:100%;margin:0;background:#f3f4f6;overflow-x:hidden}
@@ -25,9 +53,9 @@
 
     /* ===== HEADER (FIXED) ===== */
     .app-header{
-      position:fixed; top:0; left:0; right:0; z-index:1000;
+      position:fixed; top:0; left:0; right:0; z-index:var(--z-header);
       background:#e8fff3; border-bottom:1px solid #d9f7e6;
-      padding-top:env(safe-area-inset-top,0px);
+      padding-top:var(--safe-area-top);
     }
     /* header chia 2 khu: brand (logo+tên) và login */
     .header-grid{
@@ -93,6 +121,12 @@
       cursor: pointer; 
       touch-action: manipulation;
       min-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .login-btn:hover{ background: #066a42; }
@@ -152,31 +186,409 @@
     .submenu{ margin:.25rem 0 .5rem .75rem; }
     .submenu .menu-item{ padding:.45rem .6rem; }
 
+    /* ===== SIDEBAR UPDATE INFO ===== */
+    .sidebar-update-info {
+      background: #f0f9ff;
+      color: #0b3d2c;
+      padding: 8px 12px;
+      margin: 0 0 12px 0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      border-left: 4px solid #0ea35b;
+      line-height: 1.3;
+    }
+
+    /* ===== DESKTOP UPDATE DATE ===== */
+    .desktop-update-date {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 6px 12px;
+      margin: 0 0 12px 0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      border-left: 4px solid #f59e0b;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    /* ===== WELCOME BANNER ===== */
+    .welcome-banner {
+      position: fixed;
+      top: var(--header-h);
+      left: var(--sidebar-width);
+      right: 0;
+      z-index: var(--z-banner);
+      background: linear-gradient(135deg, #059669 0%, #00a758 100%);
+      color: white;
+      padding: 8px 20px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      display: none;
+      line-height: 1.2;
+      pointer-events: none; /* Không chặn click events */
+    }
+
+    /* ===== NORMAL LOGIN CONTAINER ===== */
+    .normal-login-container {
+      position: fixed;
+      top: calc(var(--header-h) + 40px);
+      left: 0;
+      width: var(--sidebar-width);
+      z-index: var(--z-toc);
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .normal-login-content {
+      padding: 12px 20px;
+    }
+    
+    /* Ẩn normalLoginContainer trên tất cả thiết bị */
+    .normal-login-container {
+      display: none !important;
+    }
+
+    .normal-login-update-date {
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #0b3d2c;
+      margin-bottom: 12px;
+    }
+
+    .normal-login-button {
+      width: 100%;
+      height: 40px;
+      background: #f59e0b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .normal-login-button:hover {
+      background: #d97706;
+    }
+
+    /* ===== MOBILE CONTAINER ===== */
+    .mobile-container {
+      position: fixed;
+      top: calc(var(--header-h) + 40px);
+      left: 0;
+      right: 0;
+      z-index: var(--z-toc);
+      background: #fff;
+      border-bottom: none;
+      box-shadow: none;
+      display: none;
+      /* Chiều cao vừa khít với nội dung */
+      height: auto;
+      min-height: auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mobile-container-content {
+      padding: 10px 16px;
+      /* Loại bỏ margin và padding thừa */
+      margin: 0;
+    }
+
+    .mobile-update-date {
+      color: #0b3d2c;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+      margin: 0;
+      padding: 0;
+    }
+
+
+    /* ===== MOBILE AGENT INFO ===== */
+    .mobile-agent-info {
+      position: fixed;
+      top: calc(var(--header-h) + 40px + 40px + 40px);
+      left: 0;
+      right: 0;
+      z-index: var(--z-toc);
+      background: #fff;
+      color: #0b3d2c;
+      padding: 8px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: none;
+      margin: 0;
+    }
+    
+    /* Điều chỉnh vị trí mobile agent info khi có agent search container */
+    body.showing-agent-search .mobile-agent-info {
+      top: calc(var(--header-h) + 40px + 80px + 200px);
+    }
+    
+    /* Dời mobile agent info xuống thêm 50px sau khi nhấn calculateOtherAgentBtn */
+    body.after-calculate-other .mobile-agent-info {
+      top: calc(var(--header-h) + 40px + 80px + 50px);
+    }
+
+    .mobile-agent-info-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mobile-agent-info-text {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mobile-agent-info-text strong {
+      color: #0b3d2c;
+      font-weight: 700;
+    }
+
+    .mobile-agent-info-text small {
+      color: #6b7280;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mobile-agent-info-button {
+      height: 36px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      min-width: 120px;
+      margin: 0;
+    }
+
+    .mobile-agent-info-button.normal-login {
+      background: #059669;
+      color: #fff;
+    }
+
+    .mobile-agent-info-button.special-login {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    /* ===== LOADING SCREEN ===== */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: var(--z-loading); /* Cao hơn header và banner */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .loading-content {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #e5e7eb;
+      border-top: 4px solid var(--brand);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* ===== MOBILE TOC (DANH MỤC DROPDOWN) =====
        Luôn treo dưới header -> fixed + top = --header-h */
     #tocMobile{
-      position:fixed; top:var(--header-h); left:0; right:0; z-index:880;
-      background:#fff; padding:10px 10px 6px;
-      border-bottom:1px solid #e5e7eb; display:none;
+      position:fixed; top:calc(var(--header-h) + 40px + 40px); left:0; right:0; z-index:var(--z-toc);
+      background:#fff; padding:6px 10px 4px;
+      border-bottom:none; display:none;
       will-change:top;
+      margin: 0;
     }
-    #tocMobile .row{ display:flex; gap:8px; }
-    #tocSelect{
-      flex:1 1 auto; height:44px; border:1px solid #c7d5e6; border-radius:10px; padding:0 10px; font-weight:800; color:#00519c; background:#eff5ff;
-      font-size:16px;
+    #tocMobile .row{ 
+      display:grid; 
+      grid-template-columns: 2fr 2fr 1fr; 
+      gap:6px; 
     }
-    #supportMobile{ flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; height:44px;
-      padding:0 14px; background:#00a758; color:#fff; border-radius:10px; text-decoration:none; font-weight:900; white-space:nowrap; }
+    
+    /* Nút danh mục mobile */
+    .mobile-menu-btn {
+      height: 36px;
+      border: 1px solid #c7d5e6;
+      border-radius: 8px;
+      padding: 0;
+      font-weight: 800;
+      color: #00519c;
+      background: #eff5ff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    
+    .mobile-menu-btn:hover {
+      background: #e0f2fe;
+      border-color: #0ea5e9;
+    }
+    
+    /* Nút tính toán cho đại lý khác mobile */
+    .mobile-calculate-other-btn {
+      height: 36px;
+      border: 1px solid #f59e0b;
+      border-radius: 8px;
+      padding: 0;
+      font-weight: 800;
+      color: #fff;
+      background: #f59e0b;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      line-height: 1.1;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .mobile-calculate-other-btn:hover {
+      background: #d97706;
+      border-color: #d97706;
+    }
+    
+    /* Nút "Tính cho tôi" màu xanh lá trong TOC */
+    .mobile-calculate-other-btn.normal-login {
+      background: #059669 !important;
+      border-color: #059669 !important;
+    }
+    
+    .mobile-calculate-other-btn.normal-login:hover {
+      background: #047857 !important;
+      border-color: #047857 !important;
+    }
+    
+    /* Nút đăng xuất mobile */
+    .mobile-logout-btn {
+      height: 36px;
+      border: 1px solid #dc2626;
+      border-radius: 8px;
+      padding: 0;
+      font-weight: 800;
+      color: #fff;
+      background: #dc2626;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      width: 100%;
+    }
+    
+    .mobile-logout-btn:hover {
+      background: #b91c1c;
+      border-color: #b91c1c;
+    }
+    
+    /* Mobile menu dropdown */
+    .mobile-menu-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      margin-top: 12px;
+    }
+    
+    .mobile-menu-content {
+      padding: 8px 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    
+    .mobile-menu-item {
+      display: block;
+      padding: 12px 16px;
+      color: #0b3d2c;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 1px solid #f3f4f6;
+      transition: background-color 0.2s;
+    }
+    
+    .mobile-menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .mobile-menu-item:hover {
+      background-color: #f9fafb;
+    }
 
     /* ===== CONTENT ===== */
     /* chừa chỗ dưới header + dropdown mobile (nếu có) */
     body{ padding-top: calc(var(--header-h) + var(--toc-h) + 8px); }
+    
+    /* Chừa chỗ cho banner khi đã đăng nhập */
+    body.logged-in{ padding-top: calc(var(--header-h) + 40px + var(--toc-h) - 40px); }
+    
+      /* Chừa chỗ cho normal login container */
+      body.logged-in.has-normal-login-container{ padding-top: calc(var(--header-h) + 40px + 60px + var(--toc-h) - 40px); }
+      
+      /* Chừa chỗ cho update date trên mobile */
+      body.logged-in.mobile{ padding-top: calc(var(--header-h) + 40px + 40px + var(--toc-h) - 40px); }
+      
+      /* Chừa chỗ cho TOC mobile khi đã đăng nhập */
+      body.logged-in{ padding-top: calc(var(--header-h) + 40px + 40px + var(--toc-h) - 40px); }
+      
+      /* Chừa chỗ cho mobile agent info */
+      body.logged-in.mobile.has-agent-info{ padding-top: calc(var(--header-h) + 40px + 40px + 40px + var(--toc-h) - 40px); }
     /* chừa chỗ cho footer */
-    body{ padding-bottom: calc(2.25 * var(--footer-h) + env(safe-area-inset-bottom,0px)); }
+    body{ padding-bottom: calc(2.25 * var(--footer-h) + var(--safe-area-bottom)); }
 
     #contentWrap{ margin-left:0; }
     body.sidebar-open #contentWrap{ margin-left:var(--sidebar-width); }
-    main{ max-width:1200px; margin:0 auto; padding:14px; }
+    main{ max-width:1200px; margin:0 auto; padding:-46px 14px 14px 14px; }
 
     /* Ẩn toàn bộ phần ngoài header khi chưa login */
     body.logged-out #sidebar,
@@ -184,9 +596,8 @@
     body.logged-out #contentWrap,
     body.logged-out #supportDesk { display:none !important; }
     
-    /* Ẩn dropdown TOC khi chưa login nhưng giữ nút hỗ trợ */
-    body.logged-out #tocMobile .row { display:none !important; }
-    body.logged-out #tocMobile { display:block !important; }
+    /* Ẩn TOC khi chưa đăng nhập trên cả desktop và mobile */
+    body.logged-out #tocMobile { display:none !important; }
     
     /* Hiển thị nút hỗ trợ mobile khi chưa đăng nhập - nằm trên footer */
     body.logged-out #tocMobile::after {
@@ -194,18 +605,23 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 44px;
-      padding: 0 14px;
+      height: 36px;
+      padding: 0 12px;
       background: #00a758;
       color: #fff;
-      border-radius: 10px;
+      border-radius: 8px;
       text-decoration: none;
       font-weight: 900;
       white-space: nowrap;
       position: fixed;
       right: 10px;
       bottom: calc(var(--footer-h) + 14px);
-      z-index: 940;
+      z-index: var(--z-support);
+    }
+    
+    /* Ẩn nút hỗ trợ cũ khi đã đăng nhập */
+    body.logged-in #tocMobile::after {
+      display: none !important;
     }
 
     .section-title{
@@ -214,7 +630,7 @@
     }
 
     :root{ --pad:18px; }
-    .top-fields,.top-fields-2{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:end;margin:10px var(--pad)}
+    .top-fields,.top-fields-2{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:end;margin:40px var(--pad) 10px var(--pad)}
     .top-fields-2{margin-bottom:8px}
     .field{grid-column:span 4;display:flex;flex-direction:column;min-width:0}
     .field label{font-size:1.05rem;font-weight:800;color:#0b3d2c;margin:0 0 6px 2px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -223,8 +639,89 @@
       font-weight:800;color:#0d7233;text-align:center
     }
     .field input[readonly]{background:#f8f9fa;color:#0ea35b;border-color:#dee2e6}
+    
+    /* Grid layout cho thông tin đại lý */
+    .agent-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 40px var(--pad) 16px var(--pad);
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    /* Grid layout cho 4 cột đầu tiên */
+    .agent-info-grid:first-of-type {
+      grid-template-columns: 2fr 1fr 1fr 2fr;
+    }
+    
+    /* Grid layout cho 6 cột thứ hai - chia thành 2 hàng trên desktop */
+    .agent-info-grid:nth-of-type(2) {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    
+    /* Grid layout cho các section khác */
+    .agent-info-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    /* Grid layout cho section A.2 (8 trường) */
+    #sec-khoanthu .agent-info-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    
+    /* Grid layout cho section D (4 trường) */
+    #sec-tong .agent-info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Grid layout cho section B, C (1 trường) */
+    #sec-tuyendung .agent-info-grid,
+    #sec-quan-ly .agent-info-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .agent-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .agent-field label {
+      font-size: 12px;
+      color: #374151;
+      font-weight: 600;
+    }
+    
+    .agent-field input {
+      height: 32px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 0 8px;
+      font-size: 14px;
+      background: #fff;
+      font-weight: 700;
+      color: #10b981;
+      text-align: center;
+    }
+    
+    .agent-field input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+    }
+    
+    .agent-field input[readonly] {
+      background: #f0fdf4;
+      color: #10b981;
+      font-weight: 700;
+      border-color: #bbf7d0;
+    }
     .gd-stage>b{display:block;margin:6px var(--pad);font-weight:900;color:#0b3d2c;}
-    .summary-row{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;align-items:end;margin:16px var(--pad) 8px}
+    .summary-row{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;align-items:end;margin:66px var(--pad) 8px}
     .summary-block{grid-column:span 6;text-align:center;min-width:0}
     .summary-block label{color:#0b3d2c;font-weight:900;letter-spacing:.02em;display:block;margin-bottom:6px;text-transform:uppercase;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .summary-block input{background:#f5fffb;color:#00a758;border:2px solid #00a758;border-radius:10px;font-size:16px;font-weight:900;height:56px;text-align:center;width:100%}
@@ -232,10 +729,206 @@
     #calc-btn{background:#059669;color:#fff;border:none;border-radius:12px;padding:14px 24px;font-size:18px;font-weight:800;box-shadow:0 6px 18px rgba(0,81,193,.25);white-space:nowrap;cursor:pointer;touch-action:manipulation}
 #calc-btn:hover{background:#00a758}
 
+    /* ===== SMALL MOBILE ===== */
+    @media (max-width: 480px){
+      .header-grid{ padding: 8px 8px; }
+      .logo-d{ height: 40px; }
+      .title-top{ font-size: 12px; }
+      .title-main{ font-size: 16px; }
+      .login-cluster input{ width: 100%; }
+      .login-btn{ min-width: 120px; font-size: 14px; }
+      .top-fields,.top-fields-2{grid-template-columns:1fr;gap:8px}
+      .field{grid-column:1/-1}
+      .summary-row{grid-template-columns:1fr}
+      .summary-block{grid-column:1/-1}
+      
+      /* Grid layout cho thông tin đại lý trên mobile */
+      .agent-info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+        margin: 50px 12px 16px 12px;
+        padding: 12px;
+      }
+      
+      /* TOC Mobile trên small mobile: chia 3 cột theo tỷ lệ 2-2-1 */
+      #tocMobile .row{ 
+        display:grid; 
+        grid-template-columns: 2fr 2fr 1fr; 
+        gap:6px; 
+      }
+      
+      .mobile-menu-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      
+      /* Đảm bảo nút tính thu nhập hiển thị tốt trên mobile */
+      #calc-btn{
+        width: 100%;
+        margin-top: 12px;
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+      .calc-wrap{
+        width: 100%;
+        justify-content: center;
+      }
+      
+      /* Banner trên small mobile - chiếm toàn bộ chiều rộng */
+      body.logged-in .welcome-banner {
+        left: 0;
+        right: 0;
+      }
+      
+      /* Ẩn TOC khi chưa đăng nhập trên small mobile */
+      body.logged-out #tocMobile {
+        display: none !important;
+      }
+      
+      /* Sau khi đăng nhập trên small mobile */
+      body.logged-in .header-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      
+      /* Logo và tiêu đề căn giữa header theo chiều ngang và dọc */
+      body.logged-in .brand-row {
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+      }
+      
+      /* Ẩn cột form đăng nhập sau khi đăng nhập */
+      body.logged-in .login-cluster {
+        display: none !important;
+      }
+      
+      /* Footer trên small mobile */
+      #pageFooter {
+        padding: 5px 12px 6px;
+      }
+      
+      .footer-left {
+        gap: 4px;
+      }
+    }
+
+     /* ===== AGENT SEARCH CONTAINER ===== */
+     #agentSearchContainer {
+       position: fixed;
+       top: calc(var(--header-h) + 25px);
+       left: var(--sidebar-width);
+       right: 0;
+       z-index: var(--z-content);
+       background: #fff;
+       padding: 0;
+       margin: 0;
+       border-bottom: 1px solid #e5e7eb;
+       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+     }
+
+     /* Agent search results - rộng đến footer trên desktop */
+     #agentSearchResults {
+       position: fixed;
+       top: calc(var(--header-h) + 25px + 80px); /* Dưới search container */
+       left: var(--sidebar-width);
+       right: 0;
+       bottom: 0;
+       z-index: var(--z-content);
+       background: #fff;
+       overflow-y: auto;
+       overflow-x: hidden;
+       padding: 20px 0 60px 0; /* Thêm padding bottom để tránh che nút hỗ trợ */
+       margin: 0;
+       height: calc(100vh - var(--header-h) - 25px - 80px); /* Chiều cao cố định đến cuối viewport */
+       /* Cải thiện scrollbar */
+       scrollbar-width: thin;
+       scrollbar-color: #0ea5e9 #f1f5f9;
+     }
+     
+     /* Webkit scrollbar cho Chrome/Safari */
+     #agentSearchResults::-webkit-scrollbar {
+       width: 8px;
+     }
+     
+     #agentSearchResults::-webkit-scrollbar-track {
+       background: #f1f5f9;
+       border-radius: 4px;
+     }
+     
+     #agentSearchResults::-webkit-scrollbar-thumb {
+       background: #0ea5e9;
+       border-radius: 4px;
+     }
+     
+     #agentSearchResults::-webkit-scrollbar-thumb:hover {
+       background: #0284c7;
+     }
+
     /* ===== MOBILE: MỖI DÒNG 1 TRƯỜNG ===== */
-    @media (max-width:1023px){
+     @media (max-width: 1023px){
       /* BRAND & LOGIN: brand (logo + tên) cùng 1 dòng; login mỗi thành phần 1 dòng */
       .header-grid{ grid-template-columns:1fr; }
+      
+      /* TOC Mobile: 3 cột cho nút theo tỷ lệ 2-2-1 */
+      #tocMobile .row{ 
+        display:grid; 
+        grid-template-columns: 2fr 2fr 1fr; 
+        gap:6px; 
+      }
+      
+      .mobile-menu-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+       
+       /* Agent search container trên mobile */
+       #agentSearchContainer {
+         left: 0;
+         right: 0;
+         top: calc(var(--header-h) + 40px + 40px + 40px + 5px);
+         padding: 0;
+         margin: 0;
+       }
+
+      /* Agent search results trên mobile - reset về normal flow */
+      #agentSearchResults {
+        position: static;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        background: #fff;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0;
+        margin: 0 0 500px 0; /* Thêm margin bottom để tránh footer che nội dung */
+        max-height: calc(100vh - 200px - 150px); /* Giới hạn chiều cao đến trước footer (trừ thêm 150px cho footer) */
+        /* Cải thiện scrollbar cho mobile */
+        scrollbar-width: thin;
+        scrollbar-color: #0ea5e9 #f1f5f9;
+      }
+      
+      /* Webkit scrollbar cho mobile */
+      #agentSearchResults::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      #agentSearchResults::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+      }
+      
+      #agentSearchResults::-webkit-scrollbar-thumb {
+        background: #0ea5e9;
+        border-radius: 3px;
+      }
+      
+      #agentSearchResults::-webkit-scrollbar-thumb:hover {
+        background: #0284c7;
+      }
       .brand-row{ justify-content:flex-start; }
       .login-cluster{ 
         width:100%; 
@@ -243,6 +936,30 @@
         flex-direction: column;
         align-items: stretch;
       }
+      
+      /* Đảm bảo nút tính thu nhập hiển thị tốt trên mobile */
+      #calc-btn{
+        width: 100%;
+        margin-top: 12px;
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+      .calc-wrap{
+        width: 100%;
+        justify-content: center;
+      }
+      
+      /* Mobile container chiều cao vừa khít khi đăng nhập code đặc biệt */
+      .mobile-container {
+        height: auto;
+        min-height: auto;
+      }
+      
+      .mobile-container-content {
+        padding: 10px 16px;
+        margin: 0;
+      }
+      
       .input-group {
         width: 100%;
       }
@@ -262,19 +979,307 @@
 
       body.sidebar-open #contentWrap{ margin-left:0 } /* mobile không chừa chỗ sidebar */
       body.logged-in #tocMobile{ display:block; }     /* dropdown luôn hiện khi đã đăng nhập */
+      
+      /* Hiển thị banner và update date trên mobile */
+      body.logged-in #welcomeBanner{ display:block; }
+      body.logged-in #mobileContainer{ display:block; }
+      
+      /* Ẩn desktop update date trên mobile */
+      .desktop-update-date {
+        display: none !important;
+      }
+      
+      .sidebar-update-info {
+        display: none !important;
+      }
+      
+      /* Điều chỉnh vị trí mobile container */
+      body.logged-in #mobileContainer {
+        top: calc(var(--header-h) + 40px);
+      }
+      
+      /* Banner trên mobile - chiếm toàn bộ chiều rộng */
+      body.logged-in .welcome-banner {
+        left: 0;
+        right: 0;
+      }
+      
+      /* Dời TOC mobile xuống dưới update date */
+      body.logged-in #tocMobile {
+        top: calc(var(--header-h) + 40px + 40px);
+      }
+      
+      /* Ẩn TOC khi chưa đăng nhập trên mobile */
+      body.logged-out #tocMobile {
+        display: none !important;
+      }
+      
+      /* Ẩn nút hỗ trợ cũ khi đã đăng nhập */
+      body.logged-in #tocMobile::after {
+        display: none !important;
+      }
+      
+      /* Sau khi đăng nhập trên mobile */
+      body.logged-in .header-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      
+      /* Logo và tiêu đề căn giữa header theo chiều ngang và dọc */
+      body.logged-in .brand-row {
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+      }
+      
+      /* Ẩn cột form đăng nhập sau khi đăng nhập */
+      body.logged-in .login-cluster {
+        display: none !important;
+      }
+      
+      /* Ẩn nút đăng xuất màu xanh lá trên mobile */
+      body.logged-in .logout-only {
+        display: none !important;
+      }
+      
+      /* Ẩn nút hỗ trợ desktop trên mobile sau khi đăng nhập */
+      body.logged-in #supportDesk {
+        display: none !important;
+      }
+      
+      /* Footer trên mobile */
+      #pageFooter {
+        flex-direction: column;
+        gap: 6px;
+        padding: 6px 15px 8px;
+      }
+      
+      .footer-left {
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+      }
+      
+      .footer-right {
+        justify-content: center;
+      }
     }
-    @media (min-width:1024px){
+    /* ===== TABLET ===== */
+    @media (min-width: 768px) and (max-width: 1023px){
+      .header-grid{ padding: 12px 16px; }
+      .logo-d{ height: 50px; }
+      .title-top{ font-size: 16px; }
+      .title-main{ font-size: 20px; }
+      .top-fields,.top-fields-2{grid-template-columns:repeat(6,1fr);gap:14px}
+      .field{grid-column:span 3}
+      .summary-row{grid-template-columns:repeat(2,1fr);gap:16px}
+      .summary-block{grid-column:span 1}
+      
+      /* Grid layout cho thông tin đại lý trên tablet */
+      .agent-info-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px;
+        margin: 30px 16px 16px 16px;
+        padding: 14px;
+      }
+      
+      /* Grid layout cho 6 cột trên tablet - chia thành 2 hàng */
+      .agent-info-grid:nth-of-type(2) {
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr 1fr !important;
+      }
+      
+      /* Grid layout cho các section khác trên tablet */
+      #sec-khoanthu .agent-info-grid {
+        grid-template-columns: 1fr 1fr !important;
+      }
+      
+      #sec-tong .agent-info-grid {
+        grid-template-columns: 1fr 1fr !important;
+      }
+      
+      /* Đảm bảo nút tính thu nhập hiển thị tốt trên tablet */
+      #calc-btn{
+        width: 100%;
+        margin-top: 12px;
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+      .calc-wrap{
+        width: 100%;
+        justify-content: center;
+      }
+      
+      /* Banner trên tablet - chiếm toàn bộ chiều rộng */
+      body.logged-in .welcome-banner {
+        left: 0;
+        right: 0;
+      }
+      
+      /* Ẩn TOC khi chưa đăng nhập trên tablet */
+      body.logged-out #tocMobile {
+        display: none !important;
+      }
+      
+      /* Sau khi đăng nhập trên tablet */
+      body.logged-in .header-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      
+      /* Logo và tiêu đề căn giữa header theo chiều ngang và dọc */
+      body.logged-in .brand-row {
+        justify-content: center;
+        align-items: center;
+        margin-top: 12px;
+      }
+      
+      /* Ẩn cột form đăng nhập sau khi đăng nhập */
+      body.logged-in .login-cluster {
+        display: none !important;
+      }
+      
+      /* Footer trên tablet */
+      #pageFooter {
+        padding: 6px 18px 8px;
+      }
+      
+      #supportFooter {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+      
+      /* Footer trên tablet */
+      .footer-left {
+        gap: 5px;
+      }
+      
+      /* Ẩn nút hỗ trợ desktop trên tablet sau khi đăng nhập */
+      body.logged-in #supportDesk {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: 1024px){
       body.logged-in #sidebar{ display:block; }
       body.logged-in.sidebar-open #supportDesk{ display:inline-flex; }
+      
+      /* Hiển thị banner trên desktop */
+      body.logged-in #welcomeBanner{ display:block; }
+      
+      /* Banner trên desktop - căn theo sidebar */
+      body.logged-in .welcome-banner {
+        left: var(--sidebar-width);
+        right: 0;
+      }
+      
+      /* Banner khi sidebar đóng */
+      body.logged-in:not(.sidebar-open) .welcome-banner {
+        left: 0;
+        right: 0;
+      }
+      
+      /* Ẩn tất cả mobile elements trên desktop */
+      #mobileContainer,
+      #mobileAgentInfo,
+      #mobileTOC,
+      #mobileMenuBtn,
+      #mobileLogoutBtn,
+      #mobileMenuDropdown,
+      #mobileAgentInfoButton,
+      #mobileAgentInfoText,
+      .mobile-update-date,
+      .mobile-menu-btn,
+      .mobile-calculate-other-btn,
+      .mobile-logout-btn,
+      .mobile-menu-dropdown,
+      .mobile-agent-info,
+      .mobile-container,
+      .mobile-agent-info-content,
+      .mobile-agent-info-text,
+      .mobile-agent-info-button,
+      .mobile-menu-content,
+      .mobile-menu-item {
+        display: none !important;
+      }
+      
+      /* Ẩn TOC khi chưa đăng nhập trên desktop */
+      body.logged-out #tocMobile {
+        display: none !important;
+      }
+      
+      /* Hiển thị nút đăng xuất trên desktop */
+      body.logged-in .logout-only {
+        display: block !important;
+      }
+      
+      /* Ẩn nút hỗ trợ desktop sau khi đăng nhập */
+      body.logged-in #supportDesk {
+        display: none !important;
+      }
+      
+      /* Footer trên desktop */
+      #pageFooter {
+        padding: 6px 20px 8px;
+      }
+      
+      #supportFooter {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* ===== LARGE DESKTOP ===== */
+    @media (min-width: 1440px){
+      .header-grid{ padding: 16px 24px; }
+      .logo-d{ height: 80px; }
+      .title-top{ font-size: 22px; }
+      .title-main{ font-size: 30px; }
+      .top-fields,.top-fields-2{grid-template-columns:repeat(12,1fr);gap:20px}
+      .field{grid-column:span 4}
+      .summary-row{grid-template-columns:repeat(2,1fr);gap:20px}
+      .summary-block{grid-column:span 1}
+      main{ max-width: 1400px; }
     }
 
     /* ===== FOOTER ===== */
     #pageFooter{
       position:fixed; left:0; right:0; bottom:0;
       min-height:var(--footer-h);
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-      background:#f4f6f8; color:#0b3a2a; border-top:1px solid #e3e7eb; z-index:950;
-      padding:8px 10px 10px; text-align:center; font-weight:800;
+      display:flex; flex-direction:row; align-items:center; justify-content:space-between;
+      background:#f4f6f8; color:#0b3a2a; border-top:1px solid #e3e7eb; z-index:var(--z-footer);
+      padding:6px 20px 8px; font-weight:800;
+    }
+    
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+    
+    .footer-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    #supportFooter {
+      background: #00a758;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    #supportFooter:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 167, 88, 0.3);
     }
     #pageFooter img{ height:22px; width:auto; display:block; }
     #contentWrap::after{ content:""; display:block; height: calc(0.75 * var(--footer-h) + 24px); }
@@ -282,7 +1287,7 @@
     /* Hỗ trợ desktop - luôn nằm góc dưới phía trên footer */
     #supportDesk{
       position:fixed; right:18px; bottom:calc(var(--footer-h) + 14px);
-      background:#00a758;color:#fff;padding:12px 16px;border-radius:28px;font-weight:900;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.18); z-index:940; display:inline-flex !important;
+      background:#00a758;color:#fff;padding:12px 16px;border-radius:28px;font-weight:900;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.18); z-index:var(--z-support); display:inline-flex !important;
     }
   </style>
 </head>
@@ -290,55 +1295,122 @@
   <!-- ===== HEADER ===== -->
   <header id="pageHeader" class="app-header">
     <div class="header-grid">
-      <!-- Hàng brand: logo & tên trang cùng 1 dòng -->
-     
+      <div class="brand-row">
+         &#160;&#160;<img src="../logo.webp" alt="logo" class="logo-d" />
+        <div class="title-wrap">
           <div class="title-top">HƯƠNG LÊ PMH</div>
-          <div class="title-main">CÔNG CỤ DỰ TÍNH THU NHẬP</div>
+          <div class="title-main">DỰ TÍNH THU NHẬP</div>
         </div>
       </div>
-      <!-- Cụm đăng nhập: LUÔN theo từng dòng trên mobile; desktop gọn gàng bên phải -->
-      <div class="login-cluster">
+
+      <!-- Cụm đăng nhập / đăng xuất -->
+      <form id="loginForm" class="login-cluster">
         <div class="input-group">
-          <input class="login-only" type="text" id="agent-id" placeholder="Nhập MSDL" />
+          <input class="login-only" type="text" id="agent-id" placeholder="Nhập MSDL" required />
           <div class="password-input-wrapper">
-            <input class="login-only" type="password" id="ngay-gia-nhap" placeholder="Ngày gia nhập" />
+            <input class="login-only" type="password" id="ngay-gia-nhap" placeholder="Ngày gia nhập" required />
             <button type="button" class="toggle-password" onclick="togglePassword()">
               <span class="eye-icon">👁️</span>
             </button>
           </div>
         </div>
-        <button class="login-btn login-only" type="button" onclick="searchAgent()">Đăng nhập</button>
+        <button id="loginBtn" class="login-btn login-only" type="submit">Đăng nhập</button>
         <button id="logoutBtn" class="login-btn logout-only" type="button" onclick="location.reload()">Đăng xuất</button>
+      </form>
+      </div>
+    <div id="errorTop"></div>
+  </header>
+
+  <!-- ===== WELCOME BANNER ===== -->
+  <div id="welcomeBanner" class="welcome-banner">
+    Xin chào <span id="welcomeName"></span>
+  </div>
+
+  <!-- ===== NORMAL LOGIN CONTAINER ===== -->
+  <div id="normalLoginContainer" class="normal-login-container" style="display: none;">
+    <div class="normal-login-content">
+      <div class="normal-login-update-date">
+        Dữ liệu cập nhật đến ngày: <span id="normalLoginUpdateDateText"></span>
+      </div>
+        <button id="normalLoginManualButton" class="normal-login-button" onclick="enableManualInputMode(); return false;">
+          Tính cho đại lý chưa có Code
+        </button>
+    </div>
+  </div>
+
+  <!-- ===== MOBILE CONTAINER ===== -->
+  <div id="mobileContainer" class="mobile-container" style="display: none;">
+    <div class="mobile-container-content">
+      <div class="mobile-update-date">
+        Dữ liệu cập nhật đến ngày: <span id="mobileUpdateDateText"></span>
       </div>
     </div>
-  </header>
+  </div>
+
+  <!-- ===== MOBILE AGENT INFO ===== -->
+  <div id="mobileAgentInfo" class="mobile-agent-info" style="display: none;">
+    <div class="mobile-agent-info-content">
+      <div class="mobile-agent-info-text" id="mobileAgentInfoText">
+        <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+      </div>
+      <button id="mobileAgentInfoButton" class="mobile-agent-info-button">
+        <!-- Text sẽ được cập nhật bằng JavaScript -->
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div id="loadingScreen" class="loading-screen" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Đang tải dữ liệu...</div>
+    </div>
+  </div>
 
   <!-- ===== MOBILE TOC (treo dưới header) ===== -->
   <div id="tocMobile">
     <div class="row">
-      <select id="tocSelect" aria-label="Chọn mục"></select>
-      <a id="supportMobile" href="http://zalo.me/0878783668" target="_blank" rel="noopener">Hỗ trợ</a>
+      <button id="mobileMenuBtn" class="mobile-menu-btn">Danh mục</button>
+      <button id="mobileCalculateOtherBtn" class="mobile-calculate-other-btn">Tính cho đại lý khác</button>
+      <button id="mobileLogoutBtn" class="mobile-logout-btn">Đăng xuất</button>
+    </div>
+    <!-- Mobile menu dropdown -->
+    <div id="mobileMenuDropdown" class="mobile-menu-dropdown" style="display: none;">
+      <div class="mobile-menu-content">
+        <a href="#" class="mobile-menu-item" data-target="sec-daily">Thông tin đại lý</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-muctieu">A.1 Mục tiêu tháng</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-khoanthu">A.2 Các khoản thu nhập</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-ban-hang">A.3 Thu nhập bán hàng</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-tuyendung">B. Thu nhập tuyển dụng</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-quan-ly">C. Thu nhập quản lý</a>
+        <a href="#" class="mobile-menu-item" data-target="sec-tong">D. Tổng thu nhập</a>
+      </div>
     </div>
   </div>
 
   <!-- ===== SIDEBAR (desktop) ===== -->
   <aside id="sidebar">
     <div class="sidebar-inner">
+      <!-- Thông tin đang xem -->
+      <div id="currentViewInfo" class="sidebar-update-info" style="display: none;">
+        <div id="currentViewText">Đang xem thông tin đại lý</div>
+      </div>
+      
       <div class="menu-title">Danh mục</div>
 
       <a href="#" class="menu-item active" data-target="sec-daily">THÔNG TIN ĐẠI LÝ</a>
 
-      <div class="menu-group">A. THU NHẬP TỪ BÁN HÀNG CÁ NHÂN</div>
+      <div class="menu-group">A. THU NHẬP BÁN HÀNG</div>
       <div class="submenu">
         <a href="#" class="menu-item" data-target="sec-muctieu">1. Mục tiêu tháng</a>
         <a href="#" class="menu-item" data-target="sec-khoanthu">2. Các khoản thu nhập</a>
         <a href="#" class="menu-item" data-target="sec-ban-hang">3. Thu nhập</a>
       </div>
 
-      <div class="menu-group">B. THU NHẬP TỪ HOẠT ĐỘNG TUYỂN DỤNG</div>
+      <div class="menu-group">B. THU NHẬP TUYỂN DỤNG</div>
       <a href="#" class="menu-item" data-target="sec-tuyendung">Coming Soon</a>
 
-      <div class="menu-group">C. THU NHẬP TỪ HOẠT ĐỘNG QUẢN LÝ</div>
+      <div class="menu-group">C. THU NHẬP QUẢN LÝ</div>
       <a href="#" class="menu-item" data-target="sec-quan-ly">Coming Soon</a>
 
       <a href="#" class="menu-item" data-target="sec-tong">D. TỔNG THU NHẬP</a>
@@ -346,59 +1418,52 @@
   </aside>
 
   <!-- ===== CONTENT ===== -->
-  <a id="supportDesk" href="http://zalo.me/0878783668" target="_blank" rel="noopener">Hỗ trợ</a>
+  <a id="supportDesk" href="http://zalo.me/0376763390" target="_blank" rel="noopener">Hỗ trợ</a>
 
   <div id="contentWrap">
     <main>
       <!-- 1) THÔNG TIN ĐẠI LÝ -->
       <section id="sec-daily" class="app-section">
-        <div class="section-title">THÔNG TIN ĐẠI LÝ</div>
-        <div class="top-fields">
-          <div class="field" style="flex:6">
+        <div class="agent-info-grid">
+          <div class="agent-field">
             <label for="ho-ten"><b>Họ và tên</b></label>
             <input type="text" id="ho-ten" readonly />
           </div>
-          <div class="field" style="flex:2">
+          <div class="agent-field">
             <label for="khu-vuc"><b>Khu vực</b></label>
             <input type="text" id="khu-vuc" readonly />
           </div>
-        </div>
-        <div class="top-fields">
-          <div class="field" style="flex:1.5">
+          <div class="agent-field">
             <label for="thang-lam-viec"><b>Thâm niên (tháng)</b></label>
             <input type="text" id="thang-lam-viec" readonly />
           </div>
-          <div class="field" style="flex:4">
+          <div class="agent-field">
             <label for="nhom-dai-ly"><b>Phân nhóm đại lý</b></label>
             <input type="text" id="nhom-dai-ly" readonly />
           </div>
         </div>
-        <div class="top-fields">
-          <div class="field" style="flex:1">
+        <div class="agent-info-grid">
+          <div class="agent-field">
             <label for="p13-ca-nhan"><b>P13 cá nhân</b></label>
             <input type="text" id="p13-ca-nhan" readonly />
           </div>
-          <div class="field" style="flex:1">
+          <div class="agent-field">
             <label for="he-so-thuong"><b>Hệ số tính thưởng</b></label>
             <input type="text" id="he-so-thuong" readonly />
           </div>
-        </div>
-        <div class="top-fields">
-          <div class="field" style="flex:1">
+          <div class="agent-field">
             <label for="mdrt-fyp"><b>∑ FYP DH MDRT</b></label>
             <input type="text" id="mdrt-fyp" readonly />
           </div>
-          <div class="field" style="flex:1">
+          <div class="agent-field">
             <label for="tong-fyc"><b>∑ FYC T-1 và T-2</b></label>
             <input type="text" id="tong-fyc" readonly />
           </div>
-          <div class="field" style="flex:1">
+          <div class="agent-field">
             <label for="tong-fyc-quy"><b>∑ FYC Quý hiện tại</b></label>
             <input type="text" id="tong-fyc-quy" readonly />
           </div>
-        </div>
-        <div class="top-fields">
-          <div class="field" style="flex:1">
+          <div class="agent-field">
             <label for="active-months"><b>Số tháng có hoạt động trong Quý</b></label>
             <input type="text" id="active-months" readonly />
           </div>
@@ -407,13 +1472,13 @@
 
       <!-- 2) A.1 MỤC TIÊU THÁNG -->
       <section id="sec-muctieu" class="app-section" style="display:none">
-        <div class="section-title">A.1 MỤC TIÊU THÁNG</div>
-        <div class="top-fields" style="margin-bottom:10px">
-          <div class="field">
+        <div class="agent-info-grid">
+          <div class="agent-field">
             <label for="month-select"><b>Tháng dự tính</b></label>
             <select id="month-select"></select>
           </div>
         </div>
+
 
         <div id="memo-giai-doan">
           <div class="gd-stage">
@@ -427,7 +1492,52 @@
               <div class="field"><label for="fyp-gd1"><b>∑ FYP</b></label><input type="text" id="fyp-gd1" readonly/></div>
             </div>
             <div class="top-fields-2">
-              <div class="field"><label for="thuongmemo-gd1"><b>Thưởng Memo Giai đoạn 1</b></label><input type="text" id="thuongmemo-gd1" readonly/><span id="alert-gd1" style="color:red;display:none"></span></div>
+              <div class="field"><label for="thuongmemo-gd1"><b>Thưởng Memo Giai đoạn 1</b></label><input type="text" id="thuongmemo-gd1" readonly/></div>
+            </div>
+
+            <!-- ✅ Cảnh báo GĐ1 -->
+            <div class="top-fields-2">
+              <div class="field"><span id="alert-gd1" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%""></span></div>
+            </div>
+
+            <!-- ✅ Cờ HĐ 16tr FYP nộp 1–8/9/2025 -->
+            <div className="mt-6" style="margin-top: 8px; margin-bottom: 40px; margin-left: var(--pad); margin-right: var(--pad); padding: 20px; background: #f0f9ff; border: 2px solid #0ea5e9; border-radius: 12px; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.1);">
+              <label className="font-medium block mb-3" style="font-weight: 700; display: block; margin-bottom: 16px; color: #0b3d2c; font-size: 18px; text-align: left; line-height: 1.3;">
+                Có hợp đồng 16tr FYP nộp từ 1–8/9/2025?
+              </label>
+              <div className="flex gap-6" style="display: flex; gap: 24px; margin-bottom: 16px; justify-content: flex-start;">
+                <label style="display: flex; align-items: center; cursor: pointer; font-size: 16px; font-weight: 600; padding: 8px 16px; background: #fff; border: 1px solid #0ea5e9; border-radius: 8px; transition: all 0.3s;">
+                  <input
+                    type="radio"
+                    name="p1_has_16fyp_1to8Sep"
+                    id="p1_has_16fyp_1to8Sep_yes"
+                    style="margin-right: 12px; transform: scale(1.2);"
+                  />
+                  <span className="ml-2">Có</span>
+                </label>
+                <label style="display: flex; align-items: center; cursor: pointer; font-size: 16px; font-weight: 600; padding: 8px 16px; background: #fff; border: 1px solid #0ea5e9; border-radius: 8px; transition: all 0.3s;">
+                  <input
+                    type="radio"
+                    name="p1_has_16fyp_1to8Sep"
+                    id="p1_has_16fyp_1to8Sep_no"
+                    checked
+                    style="margin-right: 12px; transform: scale(1.2);"
+                  />
+                  <span className="ml-2">Không</span>
+                </label>
+              </div>
+
+              <div id="expectedCCContainer" style="margin-top: 16px; display: none; text-align: left;">
+                <label className="block mb-2" style="display: block; margin-bottom: 8px; font-weight: 700; color: #0b3d2c; font-size: 16px;">Số lượng CC dự kiến</label>
+                <input
+                  type="number"
+                  id="expectedCCCount"
+                  min="1"
+                  style="border: 2px solid #0ea5e9; border-radius: 8px; padding: 12px 16px; width: 180px; background-color: #fff; font-weight: 700; color: #0d7233; font-size: 16px; text-align: left;"
+                  placeholder="≥1"
+                />
+                <div id="expectedCCWarning" style="display: none; margin-top: 8px; padding: 8px 12px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; color: #dc2626; font-weight: 600; font-size: 14px;"></div>
+              </div>
             </div>
           </div>
 
@@ -442,7 +1552,10 @@
               <div class="field"><label for="fyp-gd2"><b>∑ FYP</b></label><input type="text" id="fyp-gd2" readonly/></div>
             </div>
             <div class="top-fields-2">
-              <div class="field"><label for="thuongmemo-gd2"><b>Thưởng Memo Giai đoạn 2</b></label><input type="text" id="thuongmemo-gd2" readonly/><span id="alert-gd2" style="color:red;display:none"></span></div>
+              <div class="field"><label for="thuongmemo-gd2"><b>Thưởng Memo Giai đoạn 2</b></label><input type="text" id="thuongmemo-gd2" readonly/></div>
+            </div>
+            <div class="top-fields-2">
+              <div class="field"><span id="alert-gd2" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%""></span></div>
             </div>
           </div>
 
@@ -457,7 +1570,10 @@
               <div class="field"><label for="fyp-gd3"><b>∑ FYP</b></label><input type="text" id="fyp-gd3" readonly/></div>
             </div>
             <div class="top-fields-2">
-              <div class="field"><label for="thuongmemo-gd3"><b>Thưởng Memo Giai đoạn 3</b></label><input type="text" id="thuongmemo-gd3" readonly/><span id="alert-gd3" style="color:red;display:none"></span></div>
+              <div class="field"><label for="thuongmemo-gd3"><b>Thưởng Memo Giai đoạn 3</b></label><input type="text" id="thuongmemo-gd3" readonly/></div>
+            </div>
+            <div class="top-fields-2">
+              <div class="field"><span id="alert-gd3" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%""></span></div>
             </div>
           </div>
 
@@ -484,22 +1600,36 @@
 
       <!-- 3) A.2 CÁC KHOẢN THU NHẬP -->
       <section id="sec-khoanthu" class="app-section" style="display:none">
-        <div class="section-title">A.2 CÁC KHOẢN THU NHẬP</div>
-        <div class="top-fields">
-          <div class="field"><label><b>FYC SP chính (30%)</b></label><input type="text" id="fyc-chinh" readonly/></div>
-          <div class="field"><label><b>FYC SP gắn kèm (20%)</b></label><input type="text" id="fyc-kem" readonly/></div>
-        </div>
-        <div class="top-fields">
-          <div class="field"><label><b>Thưởng thêm SP gắn kèm (20%)</b></label><input type="text" id="thuong-kem" readonly/></div>
-          <div class="field"><label><b>FYC Tính chính sách</b></label><input type="text" id="fyc-thuong" readonly/></div>
-        </div>
-        <div class="top-fields">
-          <div class="field"><label><b>Thưởng NSXS Manulife Pro</b></label><input type="text" id="thuong-nspro" readonly/></div>
-          <div class="field"><label><b>Thưởng Năng suất hàng tháng</b></label><input type="text" id="thuong-nst" readonly/></div>
-        </div>
-        <div class="top-fields">
-          <div class="field"><label><b>Thưởng Năng suất hàng Quý</b></label><input type="text" id="thuong-nsq" readonly/></div>
-          <div class="field">
+        <div class="agent-info-grid">
+          <div class="agent-field">
+            <label><b>FYC SP chính (30%)</b></label>
+            <input type="text" id="fyc-chinh" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>FYC SP gắn kèm (20%)</b></label>
+            <input type="text" id="fyc-kem" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>Thưởng thêm SP gắn kèm (20%)</b></label>
+            <input type="text" id="thuong-kem" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>FYC Tính chính sách</b></label>
+            <input type="text" id="fyc-thuong" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>Thưởng NSXS Manulife Pro</b></label>
+            <input type="text" id="thuong-nspro" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>Thưởng Năng suất hàng tháng</b></label>
+            <input type="text" id="thuong-nst" readonly/>
+          </div>
+          <div class="agent-field">
+            <label><b>Thưởng Năng suất hàng Quý</b></label>
+            <input type="text" id="thuong-nsq" readonly/>
+          </div>
+          <div class="agent-field">
             <label><b>Thưởng Tiến độ MDRT</b></label>
             <input type="text" id="thuong-mdrt" readonly/>
             <span id="alert-mdrt" style="color:#d62929;display:none"></span>
@@ -508,52 +1638,106 @@
         <div class="top-fields">
           <div class="field"><label for="thuong-memo" class="income-note"><b>0001M08/2025/ASBD</b></label><input type="text" id="thuong-memo" readonly/></div>
         </div>
+
+        <!-- ✅ Thưởng thêm khác trong A.2 -->
+        <div id="extraRewardsSectionA2" style="margin-top: 24px; margin-left: var(--pad); margin-right: var(--pad); display: none;">
+          <h3 style="font-weight: 700; color: #0b3d2c; margin-bottom: 16px; font-size: 18px; padding: 12px 16px; background: #f0f9ff; border-left: 6px solid #0ea5e9; border-radius: 8px;">🎁 THƯỞNG THÊM KHÁC</h3>
+          <ul id="extraRewardsListA2" style="margin: 0; padding: 0; list-style: none;">
+            <!-- Danh sách thưởng sẽ được render bằng JavaScript -->
+          </ul>
+        </div>
+
+        <div class="top-fields">
+          <div class="field"><span id="alert-gd1-summary" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%"></span></div>
+        </div>
+        <div class="top-fields">
+          <div class="field"><span id="alert-gd2-summary" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%"></span></div>
+        </div>
+        <div class="top-fields">
+          <div class="field"><span id="alert-gd3-summary" style="color:red;font-weight:bold;font-size:14px;text-align:left;display:block;width:100%"></span></div>
+        </div>
       </section>
 
       <!-- 4) A.3 THU NHẬP BÁN HÀNG -->
       <section id="sec-ban-hang" class="app-section" style="display:none">
-        <div class="section-title">A.3 THU NHẬP BÁN HÀNG</div>
         <div class="summary-row">
           <div class="summary-block"><label for="tong-thu-nhap">Tổng thu nhập bán hàng (A)</label><input type="text" id="tong-thu-nhap" readonly/></div>
           <div class="summary-block"><label for="ty-le-thu-nhap">Tỷ lệ thu nhập/doanh thu</label><input type="text" id="ty-le-thu-nhap" readonly/></div>
         </div>
-        <hr><div class="section-title" style="position:static;border-left-color:#0d72b5">CHÚC BẠN SỞ HỮU TỐI ĐA THU NHẬP</div>
+
+        <!-- ✅ Thưởng thêm khác trong A.3 -->
+        <div id="extraRewardsSectionA3" style="margin-top: 24px; margin-left: var(--pad); margin-right: var(--pad); display: none;">
+          <h3 style="font-weight: 700; color: #0b3d2c; margin-bottom: 16px; font-size: 18px; padding: 12px 16px; background: #f0f9ff; border-left: 6px solid #0ea5e9; border-radius: 8px;">🎁 THƯỞNG THÊM KHÁC</h3>
+          <ul id="extraRewardsListA3" style="margin: 0; padding: 0; list-style: none;">
+            <!-- Danh sách thưởng sẽ được render bằng JavaScript -->
+          </ul>
+        </div>
+
+        <hr><div style="text-align:center;font-weight:900;color:#0d72b5;font-size:18px;padding:20px 0;border-left:6px solid #0d72b5;background:#f0f9ff;margin:20px 0;border-radius:8px">CHÚC BẠN SỞ HỮU TỐI ĐA THU NHẬP</div>
       </section>
 
       <!-- 5) B. TUYỂN DỤNG -->
       <section id="sec-tuyendung" class="app-section" style="display:none">
-        <div class="section-title">B. THU NHẬP TỪ HOẠT ĐỘNG TUYỂN DỤNG</div>
-        <div class="top-fields">
-          <div class="field">
+        <div class="agent-info-grid">
+          <div class="agent-field">
             <label><b>Thu nhập tuyển dụng (B)</b></label>
             <input type="text" id="thu-nhap-tuyen-dung" value="0" readonly />
           </div>
         </div>
-        <div class="top-fields"><div class="field"><div style="color:#0ea35b;font-weight:900">Coming soon</div></div></div>
+        <div class="agent-info-grid">
+          <div class="agent-field">
+            <div style="color:#0ea35b;font-weight:900;text-align:center;padding:20px">Coming soon</div>
+          </div>
+        </div>
       </section>
 
       <!-- 6) C. QUẢN LÝ -->
       <section id="sec-quan-ly" class="app-section" style="display:none">
-        <div class="section-title">C. THU NHẬP TỪ HOẠT ĐỘNG QUẢN LÝ</div>
-        <div class="top-fields">
-          <div class="field">
+        <div class="agent-info-grid">
+          <div class="agent-field">
             <label><b>Thu nhập quản lý (C)</b></label>
             <input type="text" id="thu-nhap-quan-ly" value="0" readonly />
           </div>
         </div>
-        <div class="top-fields"><div class="field"><div style="color:#0ea35b;font-weight:900">Coming soon</div></div></div>
+        <div class="agent-info-grid">
+          <div class="agent-field">
+            <div style="color:#0ea35b;font-weight:900;text-align:center;padding:20px">Coming soon</div>
+          </div>
+        </div>
       </section>
 
       <!-- 7) D. TỔNG THU NHẬP -->
       <section id="sec-tong" class="app-section" style="display:none">
-        <div class="section-title">D. TỔNG THU NHẬP (A + B + C)</div>
-        <div class="summary-row">
-          <div class="summary-block"><label for="tong-A">A — Thu nhập bán hàng</label><input type="text" id="tong-A" readonly/></div>
-          <div class="summary-block"><label for="tong-B">B — Thu nhập tuyển dụng</label><input type="text" id="tong-B" readonly/></div>
+        <div class="agent-info-grid">
+          <div class="agent-field">
+            <label for="tong-A"><b>A — Thu nhập bán hàng</b></label>
+            <input type="text" id="tong-A" readonly/>
+          </div>
+          <div class="agent-field">
+            <label for="tong-B"><b>B — Thu nhập tuyển dụng</b></label>
+            <input type="text" id="tong-B" readonly/>
+          </div>
+          <div class="agent-field">
+            <label for="tong-C"><b>C — Thu nhập quản lý</b></label>
+            <input type="text" id="tong-C" readonly/>
+          </div>
+          <div class="agent-field">
+            <label for="tong-ABC"><b>D — TỔNG THU NHẬP (A + B + C)</b></label>
+            <input type="text" id="tong-ABC" readonly/>
+          </div>
         </div>
-        <div class="summary-row">
-          <div class="summary-block"><label for="tong-C">C — Thu nhập quản lý</label><input type="text" id="tong-C" readonly/></div>
-          <div class="summary-block"><label for="tong-ABC">D — TỔNG THU NHẬP (A + B + C)</label><input type="text" id="tong-ABC" readonly/></div>
+
+        <!-- ✅ Thưởng thêm khác -->
+        <div id="extraRewardsSection" style="margin-top: 24px; margin-left: var(--pad); margin-right: var(--pad); display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="font-weight: 600; color: #0b3d2c; margin: 0; font-size: 16px;">Thưởng thêm khác</h3>
+            <button onclick="testExtraRewards()" style="background: #059669; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">
+              🧪 Test
+            </button>
+          </div>
+          <ul id="extraRewardsList" style="margin: 0; padding: 0; list-style: none;">
+            <!-- Danh sách thưởng sẽ được render bằng JavaScript -->
+          </ul>
         </div>
       </section>
     </main>
@@ -561,15 +1745,47 @@
 
   <!-- ===== FOOTER ===== -->
   <footer id="pageFooter">
+    <div class="footer-left">
     <div>Bản quyền trang web thuộc về</div>
-    <p> HƯƠNG LÊ PMH®</p>
+    <p>HƯƠNG LÊ PMH™</p>
+    </div>
+    <div class="footer-right">
+      <a id="supportFooter" href="http://zalo.me/0376763390" target="_blank" rel="noopener">Hỗ trợ</a>
+    </div>
   </footer>
 
   <!-- ===== LOGIC (GIỮ NGUYÊN, CHỈ CHỈNH HÀNH VI CUỘN TRÊN MOBILE) ===== -->
   <script>
 /* ===== GLOBAL VARS ===== */
-let data=[],nspro=[],nst6=[],nst7=[],nsq6=[],nsq7=[],hsdt=[],trackingMDRT=[];
+let data=[],nspro=[],nst6=[],nst7=[],nsq6=[],nsq7=[],hsdt=[],trackingMDRT=[],smData=[];
 let isDataReady=false, isLoggedIn=false;
+let currentSpecialUser=null, currentCalculatingAgent=null, originalAgentData=null;
+
+/* ===== DATA MODELS & CONSTANTS ===== */
+// ✅ Thêm lựa chọn đối tượng tính thu nhập
+const IncomeTarget = {
+  SELF: 'self',
+  CANDIDATE_NOCODE: 'candidate_nocode'
+};
+
+// ✅ Mặc định hồ sơ "Ứng viên/ĐLM chưa loadcode"
+const DEFAULT_CANDIDATE_NOCODE = {
+  displayName: 'Ứng viên/ĐLM chưa loadcode',
+  region: undefined,          // giữ nguyên theo lựa chọn UI hiện có
+  seniorityMonths: 0,         // Thâm niên: 0
+  groupLevel: 'M0',           // Phân nhóm: M0
+  p13: 100,                   // P13: 100
+  bonusFactor: 1,             // Hệ số thưởng: 1
+  // Các trường tiền/điểm còn lại: 0
+  kpi1: 0, kpi2: 0, allowance: 0, otherPoints: 0, otherMoney: 0,
+};
+
+// ✅ Phân quyền cho mã đặc biệt
+const SPECIAL_PERMISSIONS = {
+  '28349': { // PSSM. Lê Hà Thiên Hương - Xem toàn bộ
+    name: 'PSSM. Lê Hà Thiên Hương',
+    regions: 'ALL'
+};
 
 /* ===== PASSWORD TOGGLE ===== */
 function togglePassword() {
@@ -589,6 +1805,27 @@ function togglePassword() {
 const NF3=new Intl.NumberFormat('vi-VN',{minimumFractionDigits:3,maximumFractionDigits:3});
 const formatMoney3=v=>Number.isFinite(+v)?NF3.format(+v):'';
 function parseMoney3(s){ if(typeof s==='number')return s; if(!s)return 0; const n=parseFloat(String(s).replace(/\./g,'').replace(',','.')); return Number.isFinite(n)?n:0; }
+
+/* ===== NUMERIC VALUE PARSER ===== */
+// Hàm chung để chuyển đổi dữ liệu từ text sang số
+// Xử lý định dạng số với dấu . cho thập phân (ví dụ: 1.5, 2.75)
+// Áp dụng cho TẤT CẢ các trường số: Active, FYC, FYP, MDRT-FYP, Số tháng làm việc, v.v.
+function parseActiveValue(value) {
+  if (value === null || value === undefined || value === "") return 0;
+  if (typeof value === "number") return value;
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed === "" || trimmed === "0" || trimmed === "0.0" || trimmed === "0.00" || trimmed === "null" || trimmed === "undefined") return 0;
+    
+    // Xử lý các trường hợp đặc biệt
+    if (trimmed === "0.0" || trimmed === "0.00") return 0;
+    
+    // Chuyển đổi sang số, dấu . là dấu thập phân
+    const num = parseFloat(trimmed);
+    return isNaN(num) ? 0 : num;
+  }
+  return 0;
+}
 
 /* ===== ID LISTS ===== */
 const MONEY_INPUT_IDS_EDITABLE=['fypchinh-gd1','fypkem-gd1','fypchinh-gd2','fypkem-gd2','fypchinh-gd3','fypkem-gd3'];
@@ -632,6 +1869,7 @@ async function loadData(){
     nsq7 =await fetchFirstJson(['../7NSQ.json','../7nsq.json'])||[];
     hsdt =await fetchFirstJson(['../hsdt.json','../HSDT.json'])||[];
     trackingMDRT=await fetchFirstJson(['../trackingmdrt.json','../TRACKING MDRT.json','../TRACKING%20MDRT.json'])||[];
+    smData=await fetchFirstJson(['../sm.json','../SM.json'])||[];
     
     console.log('loadData - nspro loaded:', nspro.length, 'records');
     console.log('loadData - nst6 loaded:', nst6.length, 'records');
@@ -664,13 +1902,33 @@ function getCurrentMonth(){return new Date().getMonth()+1;}
 function populateMonthSelect(){const sel=document.getElementById('month-select'); if(!sel)return; sel.innerHTML=''; const cur=getCurrentMonth(); for(let m=cur;m<=12;m++){const op=document.createElement('option');op.value=m;op.textContent=`Tháng ${m}`;sel.appendChild(op);}}
 
 /* ===== THƯỞNG/MEMO/TỔNG HỢP ===== */
-function getHeSoThuong(p13){const n=Number(p13);if(!isFinite(n))return 1;let best=1;for(const row of hsdt){const moc=row["P13 cá nhân"];const tl=row["TỶ LỆ"];if(moc===null){best=tl||best;continue}if(n>=Number(moc))best=Number(tl)||best}return best}
+function getHeSoThuong(p13){const n=Number(p13);if(!isFinite(n))return 1;let best=1;for(const row of hsdt){const moc=row["P13 CA NHAN"];const tl=row["TY LE"];if(moc===null){best=tl||best;continue}if(n>=Number(moc))best=Number(tl)||best}return best}
+
+// ✅ Hàm filterContractsForRewards đã được thay thế bằng logic đơn giản hơn
+// Số phiếu thăm iPhone 17 = tổng số HĐ đã nhập trong 3 giai đoạn
 function optimizeMemo(fyp,ccLimit,m1,t1,m2,t2){const F=Math.max(0,+fyp||0);const limit=(ccLimit==null||ccLimit<=0)?Infinity:Math.max(0,Math.floor(ccLimit));let best=0,used=0;const max25=Math.floor(F/m1);const maxLoop=Math.min(max25,limit);for(let i=0;i<=maxLoop;i++){const rem=F-i*m1;const cap=(limit===Infinity)?Infinity:(limit-i);const j=Math.min(Math.floor(rem/m2),cap);const u=i+j;const r=i*t1+j*t2;if(r>best || (r===best && u<used)){best=r;used=u}}return{reward:best,used}}
 function calcMemoStage(gd,sohd,tongFYP){let m1,t1,m2,t2;if(gd==='gd1'){m1=25000;t1=2500;m2=16000;t2=1500}else if(gd==='gd2'){m1=25000;t1=2000;m2=16000;t2=1000}else{m1=25000;t1=1500;m2=16000;t2=750}
   const optU=optimizeMemo(+tongFYP||0,Infinity,m1,t1,m2,t2);let res=optU,txt='';const cc=Math.max(0,+sohd||0);
   if(cc>0){if(cc<optU.used){res=optimizeMemo(+tongFYP||0,cc,m1,t1,m2,t2);txt=`Thưởng tối ưu từ ${optU.used} HĐ; bạn nhập ${cc} nên chỉ tính tối đa ${cc} HĐ.`}else if(cc>optU.used){txt=`Chỉ thưởng tối đa ${optU.used} hợp đồng!`}}
   document.getElementById('thuongmemo-'+gd).value=formatMoney3(res.reward);
-  const el=document.getElementById('alert-'+gd); if(el){el.textContent=txt; el.style.display=txt?'block':'none'}
+  
+  // Hiển thị cảnh báo với tên giai đoạn và dấu cảnh báo
+  const gdNames = {gd1: 'Giai đoạn 1', gd2: 'Giai đoạn 2', gd3: 'Giai đoạn 3'};
+  const alertText = txt ? `ℹ️ ${gdNames[gd]}: ${txt}` : '';
+  
+  // Cập nhật cảnh báo trong từng giai đoạn
+  const el = document.getElementById('alert-'+gd); 
+  if(el){
+    el.textContent = alertText; 
+    el.style.display = txt ? 'block' : 'none';
+  }
+  
+  // Cập nhật cảnh báo trong phần tổng hợp
+  const elSummary = document.getElementById('alert-'+gd+'-summary');
+  if(elSummary){
+    elSummary.textContent = alertText;
+    elSummary.style.display = txt ? 'block' : 'none';
+  }
 }
 function updateTongHop(){
   const geti=id=>parseInt((document.getElementById(id).value||'').replace(/[^\d]/g,''),10)||0;
@@ -691,6 +1949,9 @@ function updateTongHop(){
   const m2=parseMoney3(document.getElementById('thuongmemo-gd2').value);
   const m3=parseMoney3(document.getElementById('thuongmemo-gd3').value);
   document.getElementById('thuong-memo').value=formatMoney3(m1+m2+m3);
+  
+  // ✅ Cập nhật thưởng thêm khác khi có thay đổi số HĐ
+  computeExtraRewards();
 }
 
 /* ===== NS PRO / NST / NSQ / MDRT ===== */
@@ -699,7 +1960,7 @@ function calculateNSPro(){
   // 1. CHUYỂN ĐỔI DỮ LIỆU VỀ SỐ TRƯỚC KHI TÍNH
   const cc = parseInt(document.getElementById("tong-cc").value, 10) || 0;
   const tongFYP = parseMoney3(document.getElementById("tong-fyp").value) || 0;
-  const nhom = (document.getElementById("nhom-dai-ly").value || '').trim();
+  const nhom = getAgentGroupValue().trim();
   const heSo = parseFloat(document.getElementById("he-so-thuong").value) || 1;
   
   console.log('calculateNSPro - INPUT VALUES:', {
@@ -725,7 +1986,7 @@ function calculateNSPro(){
   // 3. THỰC HIỆN LOGIC TÍNH TOÁN VỚI SỐ
   let base = 0;
   for(const row of nspro){
-    const need = parseMoney3(getByKeyLoose(row, "FYP của tháng xét thưởng")) || 0;
+    const need = parseMoney3(getByKeyLoose(row, "FYP CUA THANG XET THUONG")) || 0;
     
     console.log('calculateNSPro - checking row:', {
       need: need,
@@ -787,8 +2048,8 @@ function calculateNST(){
   
   let rate = 0;
   for(const row of table){
-    const need = parseMoney3(getByKeyLoose(row, "FYC trong 3 tháng gần nhất")) || 0;
-    const rowRate = parseFloat(getByKeyLoose(row, "% Tỷ lệ thưởng năng suất tháng")) || 0;
+    const need = parseMoney3(getByKeyLoose(row, "FYC TRONG 3 THANG GAN NHAT")) || 0;
+    const rowRate = parseFloat(getByKeyLoose(row, "% TY LE THUONG NANG SUAT THANG")) || 0;
     
     console.log('calculateNST - checking row:', {
       need: need,
@@ -823,7 +2084,7 @@ function calculateNSQ(){
   const cur = parseMoney3(document.getElementById("tong-fyc-quy").value) || 0;
   const fycT = parseMoney3(document.getElementById("fyc-thuong").value) || 0;
   const heSo = parseFloat(document.getElementById("he-so-thuong").value) || 1;
-  const nh = (document.getElementById("nhom-dai-ly").value || "").trim();
+  const nh = getAgentGroupValue().trim();
   
   console.log('calculateNSQ - INPUT VALUES:', {
     month: m,
@@ -855,7 +2116,7 @@ function calculateNSQ(){
   
   let tl = 0;
   for(const row of table){
-    const need = parseMoney3(getByKeyLoose(row, "FYC của quý xét thưởng")) || 0;
+    const need = parseMoney3(getByKeyLoose(row, "FYC CUA QUY XET THUONG")) || 0;
     
     console.log('calculateNSQ - checking row:', {
       need: need,
@@ -906,14 +2167,16 @@ function calculateThuongMDRT(){
   };
 
   // 1. CHUYỂN ĐỔI DỮ LIỆU VỀ SỐ TRƯỚC KHI TÍNH
-  const m = parseInt(document.getElementById("month-select").value, 10) || 0;
+  const m = parseInt(document.getElementById("month-select").value, 10) || 0; // Tháng người dùng chọn
+  const currentMonth = new Date().getMonth() + 1; // Tháng thực tế hiện tại
   const activeMonths = parseInt((document.getElementById("active-months").value || '').replace(/[^\d]/g, ''), 10) || 0;
   const currentCC = parseInt((document.getElementById("tong-cc").value || '').replace(/[^\d]/g, ''), 10) || 0;
   const toDate = parseMoney3(document.getElementById("mdrt-fyp").value) || 0;
   const thisM = parseMoney3(document.getElementById("tong-fyp").value) || 0;
   
   console.log('calculateThuongMDRT - INPUT VALUES:', {
-    month: m,
+    selectedMonth: m,
+    currentMonth: currentMonth,
     activeMonths: activeMonths,
     currentCC: currentCC,
     toDateFYP: toDate,
@@ -928,14 +2191,125 @@ function calculateThuongMDRT(){
     return; 
   }
 
-  // 3. KIỂM TRA ĐIỀU KIỆN TIÊU CHUẨN
-  if(activeMonths < 2){ 
-    console.log('calculateThuongMDRT - not enough active months');
-    document.getElementById("thuong-mdrt").value = formatMoney3(0); 
-    setAlert('Không đủ tiêu chuẩn nhận thưởng tiến độ'); 
-    return; 
+  // 3. LOGIC CẢNH BÁO THÔNG MINH DỰA TRÊN THÁNG THỰC TẾ
+  let alertMessage = '';
+  
+  // Xác định quý và vị trí tháng trong quý
+  let quarter, monthPosition;
+  if (currentMonth >= 1 && currentMonth <= 3) {
+    quarter = 1; monthPosition = currentMonth;
+  } else if (currentMonth >= 4 && currentMonth <= 6) {
+    quarter = 2; monthPosition = currentMonth - 3;
+  } else if (currentMonth >= 7 && currentMonth <= 9) {
+    quarter = 3; monthPosition = currentMonth - 6;
+  } else {
+    quarter = 4; monthPosition = currentMonth - 9;
   }
   
+  console.log('calculateThuongMDRT - QUARTER ANALYSIS:', {
+    quarter: quarter,
+    monthPosition: monthPosition,
+    isQuarterEnd: monthPosition === 3,
+    isQuarterStart: monthPosition === 1,
+    isQuarterMiddle: monthPosition === 2
+  });
+  
+  // Trường hợp 1: Tháng thực tế là tháng cuối quý, trùng với tháng chọn
+  if (monthPosition === 3 && m === currentMonth) {
+    if (activeMonths >= 2) {
+      // Tính thưởng bình thường
+      alertMessage = '';
+    } else {
+      alertMessage = 'Không đủ tiêu chuẩn nhận thưởng tiến độ';
+    }
+  }
+  // Trường hợp 2: Tháng thực tế là tháng đầu quý, không trùng với tháng chọn
+  else if (monthPosition === 1 && m !== currentMonth) {
+    const monthsNeeded = 3 - activeMonths;
+    alertMessage = `Bạn cần thêm ${monthsNeeded} tháng có hoạt động để nhận thưởng (bao gồm tháng hiện tại)`;
+  }
+  // Trường hợp 3: Tháng thực tế là tháng thứ 2 của quý
+  else if (monthPosition === 2) {
+    // Cần kiểm tra tháng thứ 1 có hoạt động không
+    // Lấy dữ liệu từ income.json để kiểm tra
+    const found = data.find(r => eqAgent(getByKeyLoose(r,"MA DAI LY"), document.getElementById("agent-id").value));
+    if (found) {
+      const currentMonthReal = new Date().getMonth() + 1;
+      let month1, month2, month3;
+      
+      if (currentMonthReal >= 1 && currentMonthReal <= 3) {
+        month1 = 1; month2 = 2; month3 = 3;
+      } else if (currentMonthReal >= 4 && currentMonthReal <= 6) {
+        month1 = 4; month2 = 5; month3 = 6;
+      } else if (currentMonthReal >= 7 && currentMonthReal <= 9) {
+        month1 = 7; month2 = 8; month3 = 9;
+      } else {
+        month1 = 10; month2 = 11; month3 = 12;
+      }
+      
+      const activeMonth1 = parseActiveValue(getByKeyLoose(found, "HOAT DONG THANG T-1"));
+      
+      if (activeMonth1 > 0) {
+        const monthsNeeded = 3 - activeMonths;
+        alertMessage = `Bạn cần thêm ${monthsNeeded} tháng có hoạt động để nhận thưởng`;
+      } else {
+        alertMessage = 'Không đạt chuẩn';
+      }
+    }
+  }
+  
+    // 4. LOGIC TÍNH THƯỞNG DỰA TRÊN ĐIỀU KIỆN THÔNG MINH
+  let canCalculateReward = false;
+  let finalAlertMessage = '';
+  
+  // Trường hợp 1: Tháng thực tế là tháng cuối quý, trùng với tháng chọn
+  if (monthPosition === 3 && m === currentMonth) {
+    if (activeMonths >= 2) {
+      canCalculateReward = true;
+      finalAlertMessage = '';
+    } else {
+      canCalculateReward = false;
+      finalAlertMessage = 'Không đủ tiêu chuẩn nhận thưởng tiến độ';
+    }
+  }
+  // Trường hợp 2: Tháng thực tế là tháng đầu quý, không trùng với tháng chọn
+  else if (monthPosition === 1 && m !== currentMonth) {
+    canCalculateReward = false;
+    const monthsNeeded = 3 - activeMonths;
+    finalAlertMessage = `Bạn cần thêm ${monthsNeeded} tháng có hoạt động để nhận thưởng (bao gồm tháng hiện tại)`;
+  }
+  // Trường hợp 3: Tháng thực tế là tháng thứ 2 của quý
+  else if (monthPosition === 2) {
+    // Cần kiểm tra tháng thứ 1 có hoạt động không
+    const found = data.find(r => eqAgent(getByKeyLoose(r,"MA DAI LY"), document.getElementById("agent-id").value));
+    if (found) {
+      const currentMonthReal = new Date().getMonth() + 1;
+      let month1, month2, month3;
+      
+      if (currentMonthReal >= 1 && currentMonthReal <= 3) {
+        month1 = 1; month2 = 2; month3 = 3;
+      } else if (currentMonthReal >= 4 && currentMonthReal <= 6) {
+        month1 = 4; month2 = 5; month3 = 6;
+      } else if (currentMonthReal >= 7 && currentMonthReal <= 9) {
+        month1 = 7; month2 = 8; month3 = 9;
+      } else {
+        month1 = 10; month2 = 11; month3 = 12;
+      }
+      
+      const activeMonth1 = parseActiveValue(getByKeyLoose(found, "HOAT DONG THANG T-1"));
+      
+      if (activeMonth1 > 0) {
+        canCalculateReward = false;
+        const monthsNeeded = 3 - activeMonths;
+        finalAlertMessage = `Bạn cần thêm ${monthsNeeded} tháng có hoạt động để nhận thưởng`;
+      } else {
+        canCalculateReward = false;
+        finalAlertMessage = 'Không đạt chuẩn';
+      }
+    }
+  }
+  
+  // Kiểm tra điều kiện cơ bản
   if(currentCC < 1){ 
     console.log('calculateThuongMDRT - no contracts this month');
     document.getElementById("thuong-mdrt").value = formatMoney3(0); 
@@ -943,9 +2317,18 @@ function calculateThuongMDRT(){
     return; 
   }
   
-  setAlert('');
-
-  // 4. THỰC HIỆN LOGIC TÍNH TOÁN VỚI SỐ
+  // Nếu không thể tính thưởng theo logic thông minh
+  if (!canCalculateReward) {
+    console.log('calculateThuongMDRT - cannot calculate reward based on smart logic');
+    document.getElementById("thuong-mdrt").value = formatMoney3(0); 
+    setAlert(finalAlertMessage); 
+    return; 
+  }
+  
+  // Nếu có thể tính thưởng, tiếp tục logic cũ
+  setAlert(finalAlertMessage || '');
+  
+  // 5. THỰC HIỆN LOGIC TÍNH TOÁN VỚI SỐ
   const progress = toDate + thisM;
   
   console.log('calculateThuongMDRT - CALCULATION SETUP:', {
@@ -954,7 +2337,7 @@ function calculateThuongMDRT(){
     totalProgress: progress
   });
   
-  const row = trackingMDRT.find(r => parseInt(getByKeyLoose(r, 'Tháng xét'), 10) === m);
+  const row = trackingMDRT.find(r => parseInt(getByKeyLoose(r, 'THANG XET'), 10) === m);
   console.log('calculateThuongMDRT - found tracking row:', row);
   
   if(!row){ 
@@ -963,11 +2346,11 @@ function calculateThuongMDRT(){
     return; 
   }
   
-  const need = parseMoney3(getByKeyLoose(row, 'FYP YÊU CẦU')) || 0;
-  const muc1 = parseMoney3(getByKeyLoose(row, 'MỨC 1 THẤP')) || 
-                parseMoney3(getByKeyLoose(row, 'MÚC 1 THẤP')) || 
+  const need = parseMoney3(getByKeyLoose(row, 'FYP YEU CAU')) || 0;
+  const muc1 = parseMoney3(getByKeyLoose(row, 'MUC 1 THAP')) || 
+                parseMoney3(getByKeyLoose(row, 'MUC 1 THAP')) || 
                 parseMoney3(getByKeyLoose(row, 'MUC 1 THAP')) || 0;
-  const muc2 = parseMoney3(getByKeyLoose(row, 'MỨC 2 CAO')) || 
+  const muc2 = parseMoney3(getByKeyLoose(row, 'MUC 2 CAO')) || 
                 parseMoney3(getByKeyLoose(row, 'MUC 2 CAO')) || 0;
   
   console.log('calculateThuongMDRT - TRACKING DATA:', {
@@ -976,7 +2359,7 @@ function calculateThuongMDRT(){
     level2Reward: muc2
   });
   
-  // 5. TÍNH KẾT QUẢ CUỐI CÙNG
+  // 6. TÍNH KẾT QUẢ CUỐI CÙNG
   let thuong = 0; 
   if(need > 0 && progress > 0){
     const tl = progress / need; 
@@ -991,8 +2374,1595 @@ function calculateThuongMDRT(){
     finalReward: thuong
   });
   
-  // 6. HIỂN THỊ THEO ĐỊNH DẠNG YÊU CẦU
+  // 7. HIỂN THỊ THEO ĐỊNH DẠNG YÊU CẦU
   document.getElementById("thuong-mdrt").value = formatMoney3(thuong);
+}
+
+/* ===== SPECIAL LOGIN FUNCTIONS ===== */
+function performSpecialLogin(specialUser) {
+  // Hiển thị loading screen
+  showLoadingScreen();
+  
+  // Ẩn mobile agent info khi đăng nhập
+  hideMobileAgentInfo();
+  
+  // Hiển thị banner chào mừng sau 1 giây
+  setTimeout(() => {
+    hideLoadingScreen();
+    
+    // Cập nhật tên trong banner
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) {
+      const fullName = specialUser.fullname || specialUser.name;
+      const chucDanh = specialUser.chucDanh || specialUser.role || '';
+      
+      // Chỉ hiển thị CHUC DANH + TEN DAI LY trên mobile
+      if (window.innerWidth <= 1023) {
+        welcomeName.textContent = `${chucDanh} ${fullName}`.trim();
+      } else {
+        welcomeName.textContent = fullName;
+      }
+    }
+    
+    // Hiển thị banner
+    const welcomeBanner = document.getElementById('welcomeBanner');
+    if (welcomeBanner) {
+      welcomeBanner.style.display = 'block';
+    }
+    
+  // Hiển thị mobile container
+  const mobileContainer = document.getElementById('mobileContainer');
+  if (mobileContainer) {
+    mobileContainer.style.display = 'block';
+    const mobileUpdateDateText = document.getElementById('mobileUpdateDateText');
+    if (mobileUpdateDateText) {
+      // Fallback: Lấy ngày cuối cùng của tháng liền trước
+      const now = new Date();
+      let lastMonthYear = now.getFullYear();
+      let lastMonthMonth = now.getMonth() - 1;
+      
+      if (lastMonthMonth < 0) {
+        lastMonthMonth = 11;
+        lastMonthYear = now.getFullYear() - 1;
+      }
+      
+      const lastDayOfLastMonth = new Date(lastMonthYear, lastMonthMonth + 1, 0);
+      mobileUpdateDateText.textContent = lastDayOfLastMonth.toLocaleDateString('vi-VN');
+    }
+  }
+  
+  // Ẩn lựa chọn "Tính thu nhập cho" khi dùng mã đặc biệt
+  hideIncomeTargetChoice();
+    
+    // Không cần hiển thị update date nữa
+    
+    // Đợi dữ liệu load xong rồi mới hiển thị ô tìm kiếm
+    if (isDataReady && data && data.length > 0) {
+      showAgentSearchBox();
+    } else {
+      // Nếu dữ liệu chưa sẵn sàng, thử load lại
+      loadData().then(() => {
+        if (isDataReady && data && data.length > 0) {
+          showAgentSearchBox();
+        } else {
+          alert('Không thể load dữ liệu. Vui lòng refresh trang.');
+        }
+      });
+    }
+    
+  }, 1000);
+  
+  isLoggedIn = true;
+  // Bật giao diện sau đăng nhập
+  document.body.classList.remove('logged-out');
+  document.body.classList.add('logged-in');
+  applySidebarMode();
+  buildMobileTOC();
+  
+  // Ẩn nút giữa TOC cho người dùng đặc biệt trên mobile
+  const mobileCalculateOtherBtn = document.getElementById('mobileCalculateOtherBtn');
+  if (mobileCalculateOtherBtn) {
+    mobileCalculateOtherBtn.style.display = 'none';
+  }
+  
+  showSection('sec-daily');
+  setLayoutVars();
+}
+
+function showAgentSearchBox() {
+  console.log('showAgentSearchBox called');
+  
+  // Kiểm tra xem container đã tồn tại chưa
+  let searchContainer = document.getElementById('agentSearchContainer');
+  
+  if (!searchContainer) {
+    // Tạo container tìm kiếm đại lý mới
+    searchContainer = document.createElement('div');
+    searchContainer.id = 'agentSearchContainer';
+  
+  searchContainer.innerHTML = `
+    <div style="display: grid; grid-template-columns: 2fr 1.5fr 1.5fr; gap: 12px; align-items: center; max-width: 100%; margin: 0 auto; padding: 12px 16px;">
+      <input 
+        type="text" 
+        id="agentSearchInput" 
+        placeholder="MSĐL/Tên ĐL" 
+        onkeydown="if(event.key==='Enter'){console.log('Enter pressed in search input'); event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation(); testInput(); return false;}"
+        style="height: 44px; padding: 0 12px; border: 1px solid #b7e7ce; border-radius: 8px; font-size: 12px; width: 100%;"
+      />
+      <button 
+        id="searchAgentBtn" 
+        type="button"
+        onclick="testInput(); return false;"
+        style="height: 44px; padding: 0 12px; background: #059669; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 10.5px;"
+      >
+        Tìm kiếm
+      </button>
+      <button 
+        id="manualInputBtn" 
+        type="button"
+        onclick="enableManualInputMode(); return false;"
+        style="height: 44px; padding: 0 12px; background: #f59e0b; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 10.5px; width: 100%; line-height: 1.2;"
+      >
+        Tính cho đại lý<br>chưa có code
+      </button>
+    </div>
+    <div id="agentSearchResults" style="margin-top: 0;"></div>
+  `;
+  }
+  
+  // Ẩn nút nếu đang ở chế độ thủ công
+  const manualInputBtn = document.getElementById('manualInputBtn');
+  if (manualInputBtn && currentCalculatingAgent && currentCalculatingAgent.isManualMode) {
+    manualInputBtn.style.display = 'none';
+  }
+  
+  // Thêm vào contentWrap nếu chưa có
+  if (!searchContainer.parentNode) {
+    const contentWrap = document.getElementById('contentWrap');
+    if (contentWrap) {
+      contentWrap.insertBefore(searchContainer, contentWrap.firstChild);
+      console.log('Search container added to contentWrap');
+    } else {
+      console.log('contentWrap not found');
+    }
+  }
+  
+  // Hiển thị container tìm kiếm
+  searchContainer.style.display = 'block';
+  console.log('Search container displayed');
+  
+  // Thêm class để điều chỉnh vị trí mobile agent info
+  document.body.classList.add('showing-agent-search');
+  
+  // Ẩn nội dung chính khi hiển thị ô tìm kiếm
+  hideMainContent();
+  
+  // Event listeners đã được xử lý trực tiếp trong HTML
+  console.log('Search container ready with inline event handlers');
+}
+
+function hideMainContent() {
+  console.log('hideMainContent called');
+  
+  // Ẩn tất cả các section nội dung
+  const sections = document.querySelectorAll('.app-section');
+  console.log('Found sections:', sections.length);
+  sections.forEach((section, index) => {
+    console.log(`Hiding section ${index}:`, section.id);
+    section.style.display = 'none';
+  });
+  
+  // Ẩn mobile TOC
+  const mobileTOC = document.getElementById('mobileTOC');
+  if (mobileTOC) {
+    console.log('Hiding mobile TOC');
+    mobileTOC.style.display = 'none';
+  }
+  
+  // Ẩn các element khác có thể hiển thị nội dung
+  const contentElements = document.querySelectorAll('#contentWrap > *:not(#agentSearchContainer)');
+  contentElements.forEach(el => {
+    if (el.classList.contains('app-section') || el.id === 'mobileTOC') {
+      // Đã xử lý ở trên
+    } else {
+      console.log('Hiding other content element:', el);
+      el.style.display = 'none';
+    }
+  });
+}
+
+function showMainContent() {
+  console.log('showMainContent called');
+  
+  // Hiển thị lại các section nội dung
+  const sections = document.querySelectorAll('.app-section');
+  console.log('Found sections:', sections.length);
+  sections.forEach(section => {
+    section.style.display = 'block';
+    console.log('Showing section:', section.id);
+  });
+  
+  // Hiển thị lại mobile TOC
+  const mobileTOC = document.getElementById('mobileTOC');
+  if (mobileTOC) {
+    mobileTOC.style.display = 'block';
+    console.log('Showing mobile TOC');
+  }
+  
+  // Hiển thị lại contentWrap
+  const contentWrap = document.getElementById('contentWrap');
+  if (contentWrap) {
+    contentWrap.style.display = 'block';
+    console.log('Showing contentWrap');
+  }
+  
+  // Hiển thị lại tất cả các element con của contentWrap
+  const contentElements = document.querySelectorAll('#contentWrap > *');
+  contentElements.forEach(el => {
+    if (el.id !== 'agentSearchContainer') {
+      el.style.display = '';
+      console.log('Showing content element:', el.id || el.className);
+    }
+  });
+}
+
+function searchForAgent() {
+  console.log('searchForAgent called');
+  
+  // Lấy input element
+  const inputElement = document.getElementById('agentSearchInput');
+  console.log('Input element:', inputElement);
+  
+  if (!inputElement) {
+    console.log('Input element not found');
+    alert('Không tìm thấy ô nhập liệu');
+    return;
+  }
+  
+  // Lấy giá trị input
+  let searchTerm = inputElement.value;
+  console.log('Raw searchTerm from input:', searchTerm);
+  console.log('Raw searchTerm type:', typeof searchTerm);
+  
+  if (searchTerm) {
+    searchTerm = searchTerm.trim();
+  }
+  
+  console.log('Trimmed searchTerm:', searchTerm);
+  console.log('searchTerm length:', searchTerm ? searchTerm.length : 0);
+  
+  if (!searchTerm) {
+    console.log('Search term is empty after trim');
+    alert('Vui lòng nhập mã đại lý hoặc tên đại lý');
+    return;
+  }
+  
+  // Debug: Kiểm tra dữ liệu
+  console.log('searchForAgent - searchTerm:', searchTerm);
+  console.log('searchForAgent - data length:', data.length);
+  console.log('searchForAgent - isDataReady:', isDataReady);
+  
+  if (!isDataReady) {
+    document.getElementById('agentSearchResults').innerHTML = `
+      <div style="color: #dc2626; font-weight: 600; text-align: center; padding: 20px;">
+        Dữ liệu chưa sẵn sàng. Vui lòng thử lại sau.
+      </div>
+    `;
+    return;
+  }
+  
+  if (!data || data.length === 0) {
+    document.getElementById('agentSearchResults').innerHTML = `
+      <div style="color: #0ea5e9; font-weight: 600; text-align: center; padding: 20px;">
+        Vui lòng nhập thông tin tìm kiếm và thực hiện tìm kiếm.
+      </div>
+    `;
+    return;
+  }
+  
+  // Bước 1: Tìm kiếm theo MA DAI LY trước
+  let foundAgents = data.filter(agent => {
+    const agentMSDL = agent["MA DAI LY"];
+    return agentMSDL && agentMSDL.toString().toLowerCase() === searchTerm.toLowerCase();
+  });
+  
+  console.log('searchForAgent - found by MA DAI LY:', foundAgents.length);
+  
+  // Bước 2: Nếu không tìm thấy theo mã, tìm kiếm theo tên trong cột TEN DAI LY
+  if (foundAgents.length === 0) {
+    foundAgents = data.filter(agent => {
+      const agentName = agent["TEN DAI LY"] || "";
+      return agentName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    console.log('searchForAgent - found by TEN DAI LY:', foundAgents.length);
+  }
+  
+  if (foundAgents.length === 0) {
+    document.getElementById('agentSearchResults').innerHTML = `
+      <div style="color: #dc2626; font-weight: 600; text-align: center; padding: 20px;">
+        Không tìm thấy đại lý với từ khóa: ${searchTerm}
+      </div>
+    `;
+    return;
+  }
+  
+  // Lọc theo quyền truy cập
+  const accessibleAgents = foundAgents.filter(agent => {
+    const agentRegion = agent["KHU VUC"];
+    return hasRegionAccess(agentRegion, currentSpecialUser.regions);
+  });
+  
+  if (accessibleAgents.length === 0) {
+    document.getElementById('agentSearchResults').innerHTML = `
+      <div style="color: #dc2626; font-weight: 600; text-align: center; padding: 20px;">
+        Bạn không có quyền truy cập thông tin đại lý với từ khóa: ${searchTerm}
+      </div>
+    `;
+    return;
+  }
+  
+  // Hiển thị danh sách kết quả với khả năng cuộn
+  let resultsHTML = `
+    <div style="
+      margin-top: 0px; 
+      max-height: none; 
+      overflow-y: visible; 
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: #0ea5e9 #f1f5f9;
+    ">
+      <style>
+        .agent-results::-webkit-scrollbar {
+          width: 6px;
+        }
+        .agent-results::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 3px;
+        }
+        .agent-results::-webkit-scrollbar-thumb {
+          background: #0ea5e9;
+          border-radius: 3px;
+        }
+        .agent-results::-webkit-scrollbar-thumb:hover {
+          background: #0284c7;
+        }
+      </style>
+  `;
+  
+  accessibleAgents.forEach((agent, index) => {
+    const agentId = agent["MA DAI LY"];
+    const agentName = agent["fullname"] || agent["FULLNAME"] || agent["TEN DAI LY"] || "Đại lý";
+    const agentRegion = agent["KHU VUC"];
+    const agentGroup = agent["NHOM DAI LY"] || "";
+    
+    resultsHTML += `
+      <div style="display: flex; justify-content: center; margin-bottom: 8px; padding: 0 8px;">
+        <button 
+          id="agentNameClickable_${index}" 
+          data-agent-id="${agentId}"
+          style="
+            width: 98%; 
+            background: #f0f9ff; 
+            border: 1px solid #0ea5e9; 
+            border-radius: 8px; 
+            padding: 12px 16px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+          "
+          onmouseover="this.style.backgroundColor='#e0f2fe'; this.style.borderColor='#0284c7'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 2px 8px rgba(14, 165, 233, 0.2)'"
+          onmouseout="this.style.backgroundColor='#f0f9ff'; this.style.borderColor='#0ea5e9'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+        >
+          <div style="font-weight: 700; color: #0b3d2c; font-size: 16px; line-height: 1.1;">
+            ${agentName}
+          </div>
+          <div style="color: #059669; font-size: 12px; font-weight: 600;">
+            Khu vực: ${agentRegion} | ${agentGroup}
+          </div>
+        </button>
+      </div>
+    `;
+  });
+  
+  resultsHTML += '</div>';
+  document.getElementById('agentSearchResults').innerHTML = resultsHTML;
+  
+  // Event listeners cho tất cả các button
+  accessibleAgents.forEach((agent, index) => {
+    const agentButton = document.getElementById(`agentNameClickable_${index}`);
+    if (agentButton) {
+      agentButton.addEventListener('click', () => calculateForAgent(agent["MA DAI LY"], agent));
+    }
+  });
+}
+
+function calculateForAgent(agentId, agentData) {
+  currentCalculatingAgent = { id: agentId, data: agentData };
+  
+  // Ẩn mobile agent info khi đăng nhập
+  hideMobileAgentInfo();
+  
+  // Cập nhật tên trong banner từ income.json
+  const welcomeName = document.getElementById('welcomeName');
+  if (welcomeName) {
+    const fullName = agentData["TEN DAI LY"] || '';
+    const chucDanh = agentData["CHUC DANH"] || '';
+    
+    // Chỉ hiển thị CHUC DANH + TEN DAI LY trên mobile
+    console.log('Debug calculateForAgent banner:', { chucDanh, fullName, windowWidth: window.innerWidth });
+    if (window.innerWidth <= 1023) {
+      welcomeName.textContent = `${chucDanh} ${fullName}`.trim();
+      console.log('Mobile banner set to:', welcomeName.textContent);
+    } else {
+    welcomeName.textContent = fullName;
+      console.log('Desktop banner set to:', welcomeName.textContent);
+    }
+  }
+  
+  // Cập nhật thông tin đại lý trong form (sử dụng trực tiếp từ income.json)
+  document.getElementById("ho-ten").value = agentData["TEN DAI LY"] || '';
+  document.getElementById("khu-vuc").value = agentData["KHU VUC"] || '';
+  document.getElementById("thang-lam-viec").value = parseActiveValue(agentData["SO THANG LAM VIEC"]);
+  // Cập nhật trường phân nhóm đại lý (có thể là input hoặc dropdown)
+  const nhomDaiLyValue = agentData["NHOM DAI LY"] || '';
+  const manualDropdown = document.getElementById('nhom-dai-ly-dropdown');
+  if (manualDropdown) {
+    // Nếu đang ở chế độ thủ công với dropdown
+    manualDropdown.value = nhomDaiLyValue;
+  } else {
+    // Nếu là input thông thường
+    const inputField = document.getElementById('nhom-dai-ly');
+    if (inputField) {
+      inputField.value = nhomDaiLyValue;
+    }
+  }
+  const p13 = parseActiveValue(agentData["TLDTHD CA NHAN"] ?? agentData["P13 CA NHAN"]);
+  document.getElementById("p13-ca-nhan").value = Number.isFinite(p13) && p13 !== 0 ? p13 : '';
+  document.getElementById("he-so-thuong").value = getHeSoThuong(p13);
+  document.getElementById("mdrt-fyp").value = formatMoney3(parseActiveValue(agentData["MDRT-FYP TOI HIEN TAI"]));
+  const fycT1 = parseActiveValue(agentData["FYC THANG T-1"]);
+  const fycT2 = parseActiveValue(agentData["FYC THANG T-2"]);
+  document.getElementById("tong-fyc").value = formatMoney3(fycT1 + fycT2);
+  document.getElementById("tong-fyc-quy").value = formatMoney3(parseActiveValue(agentData["TONG FYC TRONG QUY HIEN TAI"]));
+  
+  // Tính số tháng có hoạt động (sử dụng trực tiếp từ income.json)
+  const currentMonth = new Date().getMonth() + 1;
+  let month1, month2, month3;
+  
+  if (currentMonth >= 1 && currentMonth <= 3) {
+    month1 = 1; month2 = 2; month3 = 3;
+  } else if (currentMonth >= 4 && currentMonth <= 6) {
+    month1 = 4; month2 = 5; month3 = 6;
+  } else if (currentMonth >= 7 && currentMonth <= 9) {
+    month1 = 7; month2 = 8; month3 = 9;
+  } else {
+    month1 = 10; month2 = 11; month3 = 12;
+  }
+  
+  let activeT, activeT1, activeT2;
+  
+  if (currentMonth === month1) {
+    activeT = agentData["HOAT DONG THANG T"];
+    activeT1 = 0; activeT2 = 0;
+  } else if (currentMonth === month2) {
+    activeT = agentData["HOAT DONG THANG T"];
+    activeT1 = agentData["HOAT DONG THANG T-1"];
+    activeT2 = 0;
+  } else {
+    activeT = agentData["HOAT DONG THANG T"];
+    activeT1 = agentData["HOAT DONG THANG T-1"];
+    activeT2 = agentData["HOAT DONG THANG T-2"];
+  }
+  
+  const activeTNum = parseActiveValue(activeT);
+  const activeT1Num = parseActiveValue(activeT1);
+  const activeT2Num = parseActiveValue(activeT2);
+  
+  let activeMonthsCount = 0;
+  if (activeTNum > 0) activeMonthsCount++;
+  if (activeT1Num > 0) activeMonthsCount++;
+  if (activeT2Num > 0) activeMonthsCount++;
+  
+  document.getElementById("active-months").value = activeMonthsCount.toString();
+  
+  // Reset các trường nhập liệu
+  ["sohd-gd1", "sohd-gd2", "sohd-gd3", "fypchinh-gd1", "fypchinh-gd2", "fypchinh-gd3", "fypkem-gd1", "fypkem-gd2", "fypkem-gd3"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  
+  sanitizeAllNumericInputs();
+  updateTongHop();
+  calculateTongThuNhap();
+  syncReadonlyTitles();
+  
+  // Ẩn ô tìm kiếm và hiển thị thông tin đại lý trong sidebar
+  hideAgentSearchBox();
+  showCalculatingAgentInfo();
+  
+  // Hiển thị mobile agent info cho người dùng đặc biệt
+  if (currentSpecialUser) {
+    showMobileCalculatingAgentInfo();
+  }
+  
+  // Hiển thị lại nội dung chính
+  showMainContent();
+  
+  // Chuyển đến section thông tin đại lý
+  showSection('sec-daily');
+}
+
+function hideAgentSearchBox() {
+  // Ẩn toàn bộ container tìm kiếm đại lý
+  const agentSearchContainer = document.getElementById('agentSearchContainer');
+  if (agentSearchContainer) {
+    agentSearchContainer.style.display = 'none';
+    console.log('Hidden agentSearchContainer');
+  }
+  
+  // Xóa class để reset vị trí mobile agent info
+  document.body.classList.remove('showing-agent-search');
+  
+  // Ẩn mobile agent info khi ẩn search box
+  hideMobileAgentInfo();
+}
+
+function showAgentSearchBoxAgain() {
+  console.log('showAgentSearchBoxAgain called');
+  
+  // Xóa tất cả dữ liệu hiện tại
+  clearAllFields();
+  
+  // Ẩn mobile agent info
+  hideMobileAgentInfo();
+  
+  // Ẩn container đăng nhập bình thường
+  hideNormalLoginContainer();
+  
+  // Xóa class after-calculate-other để reset vị trí mobile agent info
+  document.body.classList.remove('after-calculate-other');
+  
+  // Đảm bảo container search agent tồn tại và hiển thị đúng
+  let searchContainer = document.getElementById('agentSearchContainer');
+  if (!searchContainer) {
+  showAgentSearchBox();
+  } else {
+    // Đảm bảo container được hiển thị
+    searchContainer.style.display = 'block';
+    searchContainer.style.visibility = 'visible';
+  }
+  
+  // Ẩn nút giữa TOC cho người dùng đặc biệt khi quay về chế độ tìm kiếm
+  if (currentSpecialUser) {
+    const mobileCalculateOtherBtn = document.getElementById('mobileCalculateOtherBtn');
+    if (mobileCalculateOtherBtn) {
+      mobileCalculateOtherBtn.style.display = 'none';
+    }
+  }
+  
+  // Reset trạng thái
+  currentCalculatingAgent = null;
+  // Không reset isDataReady để tránh lỗi "dữ liệu chưa sẵn sàng"
+  // isDataReady = false;
+  
+  // Đảm bảo dữ liệu sẵn sàng khi chuyển về chế độ tìm kiếm
+  if (!isDataReady || !data || data.length === 0) {
+    console.log('Reloading data for search mode...');
+    loadData().then(() => {
+      console.log('Data reloaded for search mode');
+    });
+  }
+  
+  // Hiển thị lại nút màu cam và đổi về trạng thái ban đầu
+  setTimeout(() => {
+    const manualInputBtn = document.getElementById('manualInputBtn');
+    if (manualInputBtn) {
+      manualInputBtn.style.display = 'block';
+      manualInputBtn.innerHTML = 'Tính cho đại lý<br>chưa có code';
+      manualInputBtn.onclick = () => {
+        enableManualInputMode();
+        return false;
+      };
+    }
+  }, 100);
+  
+  // Đổi lại tất cả text về "Tính cho đại lý chưa có code"
+  updateAllAgentButtonsText('Tính cho đại lý chưa có code');
+  
+  // Hiển thị lại trường "Khu vực" khi quay về chế độ tìm kiếm
+  const khuVucField = document.getElementById('khu-vuc');
+  const khuVucContainer = khuVucField ? khuVucField.closest('.field') : null;
+  
+  if (khuVucContainer) {
+    khuVucContainer.style.display = 'block';
+    console.log('Shown khu-vuc field in search mode');
+  }
+  
+  // Khôi phục trường phân nhóm đại lý về dạng input khi quay về chế độ tìm kiếm
+  restoreAgentGroupField();
+  
+  // Khôi phục thuộc tính readonly cho các trường
+  restoreReadonlyFields();
+  
+  // Hiển thị lại nút normalLoginManualButton và container nếu cần
+  const normalLoginManualButton = document.getElementById('normalLoginManualButton');
+  const normalLoginContainer = document.getElementById('normalLoginContainer');
+  
+  if (normalLoginManualButton) {
+    normalLoginManualButton.style.display = 'block';
+  }
+  
+  if (normalLoginContainer) {
+    normalLoginContainer.style.display = 'block';
+    normalLoginContainer.style.visibility = 'visible';
+  }
+  
+  // Đảm bảo nút được cập nhật đúng trong showAgentSearchBox
+  setTimeout(() => {
+    showAgentSearchBox();
+  }, 200);
+  
+  console.log('Agent search box shown again');
+}
+
+function clearAllFields() {
+  console.log('Clearing all fields');
+  
+  // Danh sách tất cả các trường cần xóa
+  const fieldsToClear = [
+    // Thông tin đại lý
+    'ho-ten', 'tham-nien', 'thang-lam-viec', 'p13-ca-nhan',
+    'fyp-mdrt', 'fyc-t1-t2', 'fyc-quy-hien-tai', 'so-thang-hoat-dong',
+    'nhom-dai-ly', 'he-so-thuong', 'active-months',
+    
+    // FYP và FYC
+    'tong-fyp', 'fyp-chinh', 'fyp-kem', 'mdrt-fyp', 'tong-fyc', 'tong-fyc-quy',
+    
+    // Các khoản thu nhập
+    'fyc-chinh', 'fyc-kem', 'thuong-kem', 'fyc-thuong',
+    'thuong-nspro', 'thuong-nst', 'thuong-nsq', 'thuong-memo', 'thuong-mdrt',
+    
+    // Tổng thu nhập
+    'tong-thu-nhap', 'ty-le-thu-nhap',
+    
+    // Hợp đồng giao dịch
+    'sohd-gd1', 'sohd-gd2', 'sohd-gd3',
+    'fypchinh-gd1', 'fypchinh-gd2', 'fypchinh-gd3',
+    'fypkem-gd1', 'fypkem-gd2', 'fypkem-gd3',
+    
+    // Thu nhập tuyển dụng và quản lý
+    'thu-nhap-tuyen-dung', 'thu-nhap-quan-ly',
+    
+    // Tổng hợp
+    'tong-A', 'tong-B', 'tong-C', 'tong-ABC'
+  ];
+  
+  // Xóa tất cả các trường
+  fieldsToClear.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.value = '';
+    }
+  });
+  
+  // Xóa dropdown phân nhóm đại lý trong chế độ thủ công
+  const manualDropdown = document.getElementById('nhom-dai-ly-dropdown');
+  if (manualDropdown) {
+    manualDropdown.selectedIndex = 0; // Chọn option mặc định
+  }
+  
+  // Reset các tính toán
+  sanitizeAllNumericInputs();
+  updateTongHop();
+  calculateTongThuNhap();
+  syncReadonlyTitles();
+  
+  console.log('All fields cleared');
+}
+
+function restoreOriginalAgentData() {
+  console.log('Restoring original agent data');
+  
+  if (!originalAgentData) {
+    console.log('No original agent data to restore');
+    return;
+  }
+  
+  // Khôi phục dữ liệu đại lý gốc
+  calculateForAgent(originalAgentData.id, originalAgentData.data);
+  
+  // Hiển thị lại thông tin đại lý trong sidebar với nút "Tính cho đại lý khác"
+  showCalculatingAgentInfo();
+  
+  // Ẩn mobile agent info
+  hideMobileAgentInfo();
+  
+  // Cập nhật lại onclick cho nút TOC mobile sau khi restore
+  const mobileCalculateOtherBtn = document.getElementById('mobileCalculateOtherBtn');
+  if (mobileCalculateOtherBtn) {
+    // Đảm bảo nút hiển thị và có text đúng
+    mobileCalculateOtherBtn.style.display = 'block';
+    mobileCalculateOtherBtn.textContent = 'Tính cho đại lý khác';
+    mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn';
+    mobileCalculateOtherBtn.style.background = '#f59e0b';
+    mobileCalculateOtherBtn.style.borderColor = '#f59e0b';
+    
+    // Cập nhật onclick để gọi search container
+    mobileCalculateOtherBtn.onclick = () => {
+      // Kiểm tra xem có phải đăng nhập bình thường không
+      const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+      
+      if (isNormalLogin) {
+        // Đăng nhập bình thường: gọi cụm tìm kiếm và thay đổi nút
+        hideMainContent();
+        showAgentSearchBoxAgain();
+        
+        // Thay đổi nút trong TOC thành "Tính cho tôi" màu xanh lá
+        mobileCalculateOtherBtn.textContent = 'Tính cho tôi';
+        mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn normal-login';
+        mobileCalculateOtherBtn.style.background = '#059669';
+        mobileCalculateOtherBtn.style.borderColor = '#059669';
+        
+        // Thay đổi chức năng nút
+        mobileCalculateOtherBtn.onclick = () => {
+          restoreOriginalAgentData();
+          console.log('Mobile: Restored to original agent data from TOC button');
+          return false;
+        };
+        
+        console.log('Mobile: Called showAgentSearchBoxAgain and changed button to "Tính cho tôi"');
+      } else {
+        // Code đặc biệt: gọi cụm tìm kiếm bình thường
+        hideMainContent();
+        showAgentSearchBoxAgain();
+        console.log('Mobile: Called showAgentSearchBoxAgain from mobile TOC button');
+      }
+      
+      return false;
+    };
+  }
+  
+  console.log('Original agent data restored');
+}
+
+function enableManualInputMode() {
+  console.log('enableManualInputMode called');
+  
+  // Xóa tất cả dữ liệu trong các trường
+  clearAllFields();
+  
+  // Ẩn cụm tìm kiếm
+  hideAgentSearchBox();
+  
+  // Ẩn container đăng nhập bình thường
+  hideNormalLoginContainer();
+  
+  // Đảm bảo nút normalLoginManualButton cũng bị ẩn
+  const normalLoginManualButton = document.getElementById('normalLoginManualButton');
+  if (normalLoginManualButton) {
+    normalLoginManualButton.style.display = 'none';
+  }
+  
+  // Đảm bảo normalLoginContainer bị ẩn hoàn toàn
+  const normalLoginContainer = document.getElementById('normalLoginContainer');
+  if (normalLoginContainer) {
+    normalLoginContainer.style.display = 'none';
+    normalLoginContainer.style.visibility = 'hidden';
+  }
+  
+  // Đặt chế độ nhập thủ công
+  currentCalculatingAgent = { 
+    id: 'MANUAL_INPUT', 
+    data: null,
+    isManualMode: true 
+  };
+  
+  // Hiển thị ngay sidebar thông tin cho chế độ thủ công
+  showManualModeInfo();
+  
+  // Hiển thị nút giữa TOC cho người dùng đặc biệt khi chuyển sang chế độ thủ công
+  if (currentSpecialUser) {
+    const mobileCalculateOtherBtn = document.getElementById('mobileCalculateOtherBtn');
+    if (mobileCalculateOtherBtn) {
+      mobileCalculateOtherBtn.style.display = 'block';
+      mobileCalculateOtherBtn.textContent = 'Tính cho đại lý khác';
+      mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn';
+      mobileCalculateOtherBtn.style.background = '#f59e0b';
+      mobileCalculateOtherBtn.style.borderColor = '#f59e0b';
+    }
+  }
+  
+  // Đảm bảo sidebar hiển thị ngay lập tức
+  setTimeout(() => {
+    const currentViewInfo = document.getElementById('currentViewInfo');
+    if (currentViewInfo) {
+      currentViewInfo.style.display = 'block';
+      currentViewInfo.style.visibility = 'visible';
+      currentViewInfo.style.opacity = '1';
+    }
+  }, 100);
+  
+  // Hiển thị lại nội dung chính
+  showMainContent();
+  
+  // Chuyển đến section thông tin đại lý
+  showSection('sec-daily');
+  
+  // Bật chế độ nhập thủ công cho các trường thông tin
+  enableManualInputFields();
+  
+  // Hiển thị update date như bình thường
+  showUpdateDateForManualMode();
+  
+  // Ẩn nút màu cam trong chế độ thủ công
+  const manualInputBtn = document.getElementById('manualInputBtn');
+  if (manualInputBtn) {
+    manualInputBtn.style.display = 'none';
+  }
+  
+  // Cập nhật tất cả text "Tính cho đại lý chưa có code" thành "Tính cho đại lý khác"
+  updateAllAgentButtonsText('Tính cho đại lý khác');
+  
+  console.log('Manual input mode enabled');
+}
+
+function updateAllAgentButtonsText(newText) {
+  // Cập nhật normalLoginManualButton
+  const normalLoginManualButton = document.getElementById('normalLoginManualButton');
+  if (normalLoginManualButton) {
+    normalLoginManualButton.textContent = newText;
+  }
+  
+  // Cập nhật mobileAgentInfoButton
+  const mobileAgentInfoButton = document.getElementById('mobileAgentInfoButton');
+  if (mobileAgentInfoButton) {
+    mobileAgentInfoButton.textContent = newText;
+  }
+  
+  // Cập nhật tất cả các nút có text "Tính cho đại lý chưa có code" hoặc "Tính cho đại lý khác"
+  const allButtons = document.querySelectorAll('button');
+  allButtons.forEach(button => {
+    const text = button.textContent || button.innerHTML;
+    if (text.includes('Tính cho đại lý') && (text.includes('chưa có code') || text.includes('khác'))) {
+      if (button.innerHTML.includes('<br>')) {
+        button.innerHTML = newText.replace(' ', '<br>');
+      } else {
+        button.textContent = newText;
+      }
+    }
+  });
+  
+  // Cập nhật các nút trong HTML động
+  const calculateOtherAgentBtn = document.getElementById('calculateOtherAgentBtn');
+  if (calculateOtherAgentBtn) {
+    calculateOtherAgentBtn.textContent = newText;
+  }
+}
+
+function enableManualInputFields() {
+  console.log('enableManualInputFields called');
+  
+  // Danh sách tất cả các trường thông tin đại lý cần cho phép nhập thủ công
+  const manualFields = [
+    'ho-ten', 'tham-nien', 'thang-lam-viec', 'p13-ca-nhan',
+    'fyp-mdrt', 'fyc-t1-t2', 'fyc-quy-hien-tai', 'so-thang-hoat-dong', 
+    'tong-fyp', 'fyp-chinh', 'fyp-kem', 'active-months',
+    'mdrt-fyp', 'tong-fyc', 'tong-fyc-quy'
+  ];
+  
+  // Ẩn trường "Khu vực" trong chế độ thủ công
+  const khuVucField = document.getElementById('khu-vuc');
+  const khuVucContainer = khuVucField ? khuVucField.closest('.field') : null;
+  
+  if (khuVucContainer) {
+    khuVucContainer.style.display = 'none';
+    console.log('Hidden khu-vuc field in manual mode');
+  }
+  
+  // Tạo dropdown cho trường phân nhóm đại lý trong chế độ thủ công
+  createAgentGroupDropdownForManualMode();
+  
+  // Bỏ readonly và cho phép nhập thủ công
+  manualFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.removeAttribute('readonly');
+      field.style.backgroundColor = '#ffffff';
+      field.style.borderColor = '#059669';
+      console.log('Enabled manual input for field:', fieldId);
+    }
+  });
+  
+  // Tạo dropdown cho nhóm đại lý
+  createAgentGroupDropdown();
+  
+  // Thêm event listener cho P13 để tự động tính hệ số thưởng
+  setupP13BonusCalculation();
+  
+  // Bỏ notification trong chế độ thủ công
+  // showManualModeNotification();
+  
+  // Ẩn lựa chọn "Tính thu nhập cho" khi dùng mã đặc biệt
+  hideIncomeTargetChoice();
+}
+
+// Bỏ notification trong chế độ thủ công
+// function showManualModeNotification() {
+//   // Tạo thông báo chế độ nhập thủ công
+//   const notification = document.createElement('div');
+//   notification.id = 'manualModeNotification';
+//   notification.style.cssText = `
+//     background: #fef3c7;
+//     border: 2px solid #f59e0b;
+//     border-radius: 8px;
+//     padding: 12px 16px;
+//     margin: 16px var(--pad);
+//     color: #92400e;
+//     font-weight: 600;
+//     text-align: center;
+//   `;
+//   notification.innerHTML = `
+//     <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+//       <span>📝</span>
+//       <span>Chế độ nhập thủ công - Vui lòng nhập thông tin đại lý mới</span>
+//     </div>
+//   `;
+//   
+//   // Thêm vào đầu section thông tin đại lý
+//   const secDaily = document.getElementById('sec-daily');
+//   if (secDaily) {
+//     secDaily.insertBefore(notification, secDaily.firstChild);
+//   }
+// }
+
+function hideIncomeTargetChoice() {
+  // Function không còn cần thiết vì đã xóa fieldset
+  return;
+}
+
+function showIncomeTargetChoice() {
+  // Function không còn cần thiết vì đã xóa fieldset
+  return;
+}
+
+function createAgentGroupDropdown() {
+  // Tìm trường phân nhóm đại lý
+  const phanNhomField = document.getElementById('phan-nhom-dai-ly');
+  if (!phanNhomField) return;
+  
+  // Lấy danh sách nhóm đại lý từ data
+  const agentGroups = new Set();
+  if (data && data.length > 0) {
+    data.forEach(agent => {
+      const nhom = agent["NHOM DAI LY"] || agent["nhom dai ly"];
+      if (nhom) {
+        agentGroups.add(nhom);
+      }
+    });
+  }
+  
+  // Tạo dropdown
+  const dropdown = document.createElement('select');
+  dropdown.id = 'phan-nhom-dai-ly-dropdown';
+  dropdown.style.cssText = `
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #059669;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #ffffff;
+    color: #0b3d2c;
+  `;
+  
+  // Thêm option mặc định
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Chọn nhóm đại lý...';
+  dropdown.appendChild(defaultOption);
+  
+  // Thêm các option từ danh sách
+  Array.from(agentGroups).sort().forEach(group => {
+    const option = document.createElement('option');
+    option.value = group;
+    option.textContent = group;
+    dropdown.appendChild(option);
+  });
+  
+  // Thay thế input bằng dropdown
+  phanNhomField.parentNode.replaceChild(dropdown, phanNhomField);
+  
+  console.log('Created agent group dropdown with', agentGroups.size, 'options');
+}
+
+function createAgentGroupDropdownForManualMode() {
+  // Tìm trường phân nhóm đại lý (nhom-dai-ly)
+  const nhomDaiLyField = document.getElementById('nhom-dai-ly');
+  if (!nhomDaiLyField) return;
+  
+  // Danh sách các nhóm đại lý duy nhất từ income.json
+  const agentGroups = [
+    'M0',
+    'M1-3', 
+    'M13+',
+    'M4-6',
+    'M7-12',
+    'Manulife Pro Bạc',
+    'Manulife Pro Bạch Kim', 
+    'Manulife Pro Vàng',
+    'SA'
+  ];
+  
+  // Tạo dropdown
+  const dropdown = document.createElement('select');
+  dropdown.id = 'nhom-dai-ly-dropdown';
+  dropdown.style.cssText = `
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #059669;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: #1f2937;
+    cursor: pointer;
+  `;
+  
+  // Thêm option mặc định
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Chọn phân nhóm đại lý...';
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  dropdown.appendChild(defaultOption);
+  
+  // Thêm các option từ danh sách nhóm
+  agentGroups.forEach(group => {
+    const option = document.createElement('option');
+    option.value = group;
+    option.textContent = group;
+    dropdown.appendChild(option);
+  });
+  
+  // Thay thế input bằng dropdown
+  nhomDaiLyField.parentNode.replaceChild(dropdown, nhomDaiLyField);
+  
+  // Thêm event listener để cập nhật giá trị
+  dropdown.addEventListener('change', function() {
+    console.log('Selected agent group in manual mode:', this.value);
+  });
+  
+  console.log('Created agent group dropdown for manual mode with', agentGroups.length, 'options');
+}
+
+// Hàm khôi phục thuộc tính readonly cho các trường khi chuyển về chế độ tìm kiếm
+function restoreReadonlyFields() {
+  console.log('Restoring readonly fields for search mode');
+  
+  // Danh sách các trường cần khôi phục readonly
+  const readonlyFields = [
+    'ho-ten', 'tham-nien', 'thang-lam-viec', 'p13-ca-nhan',
+    'fyp-mdrt', 'fyc-t1-t2', 'fyc-quy-hien-tai', 'so-thang-hoat-dong', 
+    'tong-fyp', 'fyp-chinh', 'fyp-kem', 'active-months',
+    'mdrt-fyp', 'tong-fyc', 'tong-fyc-quy'
+  ];
+  
+  // Khôi phục readonly cho các trường
+  readonlyFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.setAttribute('readonly', 'readonly');
+      field.style.backgroundColor = '#f9fafb';
+      field.style.borderColor = '#e5e7eb';
+      field.style.color = '#6b7280';
+      console.log('Restored readonly for field:', fieldId);
+    }
+  });
+  
+  // Khôi phục trường phân nhóm đại lý về readonly (nếu là input)
+  const nhomDaiLyField = document.getElementById('nhom-dai-ly');
+  if (nhomDaiLyField && nhomDaiLyField.tagName === 'INPUT') {
+    nhomDaiLyField.setAttribute('readonly', 'readonly');
+    nhomDaiLyField.style.backgroundColor = '#f9fafb';
+    nhomDaiLyField.style.borderColor = '#e5e7eb';
+    nhomDaiLyField.style.color = '#6b7280';
+    console.log('Restored readonly for nhom-dai-ly field');
+  }
+  
+  console.log('All readonly fields restored');
+}
+
+// Hàm helper để lấy giá trị từ trường phân nhóm đại lý (có thể là input hoặc dropdown)
+function getAgentGroupValue() {
+  // Kiểm tra xem có dropdown trong chế độ thủ công không
+  const manualDropdown = document.getElementById('nhom-dai-ly-dropdown');
+  if (manualDropdown) {
+    return manualDropdown.value || '';
+  }
+  
+  // Nếu không có dropdown, lấy từ input thông thường
+  const inputField = document.getElementById('nhom-dai-ly');
+  if (inputField) {
+    return inputField.value || '';
+  }
+  
+  return '';
+}
+
+function setupP13BonusCalculation() {
+  // Thêm event listener cho P13 để tự động tính hệ số thưởng
+  const p13Field = document.getElementById('p13-ca-nhan');
+  const heSoField = document.getElementById('he-so-tinh-thuong');
+  
+  if (p13Field && heSoField) {
+    p13Field.addEventListener('input', () => {
+      const p13Value = parseFloat(p13Field.value) || 0;
+      const heSo = getHeSoThuong(p13Value);
+      heSoField.value = heSo;
+      console.log('Auto-calculated bonus coefficient:', heSo, 'for P13:', p13Value);
+    });
+    
+    // Tính hệ số ban đầu nếu P13 đã có giá trị
+    if (p13Field.value) {
+      const p13Value = parseFloat(p13Field.value) || 0;
+      const heSo = getHeSoThuong(p13Value);
+      heSoField.value = heSo;
+    }
+  }
+}
+
+function restoreAgentGroupField() {
+  // Khôi phục trường phân nhóm đại lý về dạng input
+  const dropdown = document.getElementById('phan-nhom-dai-ly-dropdown');
+  if (dropdown) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'phan-nhom-dai-ly';
+    input.setAttribute('readonly', 'readonly');
+    input.style.cssText = `
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #6b7280;
+    `;
+    
+    dropdown.parentNode.replaceChild(input, dropdown);
+    console.log('Restored agent group field to readonly input');
+  }
+  
+  // Khôi phục trường phân nhóm đại lý trong chế độ thủ công về dạng input
+  const manualDropdown = document.getElementById('nhom-dai-ly-dropdown');
+  if (manualDropdown) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'nhom-dai-ly';
+    input.setAttribute('readonly', 'readonly');
+    input.style.cssText = `
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #f9fafb;
+      color: #6b7280;
+    `;
+    
+    manualDropdown.parentNode.replaceChild(input, manualDropdown);
+    console.log('Restored manual mode agent group field to readonly input');
+  }
+}
+
+function getCurrentUpdateDate() {
+  // Lấy ngày cập nhật hiện tại
+  const now = new Date();
+  return now.toLocaleDateString('vi-VN');
+}
+
+function getUpdateDateFromData(agentData) {
+  // Lấy ngày cập nhật từ dữ liệu thực tế
+  if (!agentData) return getCurrentUpdateDate();
+  
+  // Lấy từ cột "NGAY CHOT DU LIEU" - cột chính xác trong income.json
+  const ngayChot = agentData["NGAY CHOT DU LIEU"];
+  
+  if (ngayChot) {
+    return ngayChot;
+  }
+  
+  // Fallback: Lấy ngày cuối cùng của tháng liền trước
+  const now = new Date();
+  let lastMonthYear = now.getFullYear();
+  let lastMonthMonth = now.getMonth() - 1;
+  
+  if (lastMonthMonth < 0) {
+    lastMonthMonth = 11;
+    lastMonthYear = now.getFullYear() - 1;
+  }
+  
+  const lastDayOfLastMonth = new Date(lastMonthYear, lastMonthMonth + 1, 0);
+  return lastDayOfLastMonth.toLocaleDateString('vi-VN');
+}
+
+function updateBannerForMobile() {
+  // Cập nhật banner khi resize window
+  const welcomeName = document.getElementById('welcomeName');
+  if (!welcomeName || !currentCalculatingAgent || !currentCalculatingAgent.data) return;
+  
+  const fullName = currentCalculatingAgent.data["TEN DAI LY"] || '';
+  const chucDanh = currentCalculatingAgent.data["CHUC DANH"] || '';
+  
+  // Chỉ hiển thị CHUC DANH + TEN DAI LY trên mobile
+  if (window.innerWidth <= 1023) {
+    welcomeName.textContent = `${chucDanh} ${fullName}`.trim();
+  } else {
+    welcomeName.textContent = fullName;
+  }
+}
+
+function showUpdateDateForManualMode() {
+  // Hiển thị mobile container cho chế độ nhập thủ công
+  const mobileContainer = document.getElementById('mobileContainer');
+  if (mobileContainer) {
+    mobileContainer.style.display = 'block';
+    
+    // Cập nhật mobile container với layout mới
+    mobileContainer.innerHTML = `
+      <div class="mobile-container-content">
+        <div class="mobile-update-date">
+          Dữ liệu chốt ngày: <span id="mobileUpdateDateText"></span>
+        </div>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-top: 12px;">
+          <div style="display: flex; align-items: center; font-weight: 700; color: #0b3d2c; font-size: 14px;">
+            Đang tính thu nhập cho<br><span id="currentAgentName"></span>
+          </div>
+          <button 
+            id="calculateOtherAgentBtn" 
+            onclick="showAgentSearchBoxAgain(); return false;"
+            style="height: 44px; padding: 0 12px; background: #059669; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 12px; line-height: 1.2;"
+          >
+            Tính thu nhập<br>đại lý khác
+          </button>
+        </div>
+      </div>
+    `;
+    
+    // Cập nhật ngày chốt dữ liệu từ income.json
+    const mobileUpdateDateText = document.getElementById('mobileUpdateDateText');
+    if (mobileUpdateDateText && data.length > 0) {
+      const updateDate = data[0]["NGAY CHOT DU LIEU"] || data[0]["NGAY CHOT DATA"];
+      mobileUpdateDateText.textContent = updateDate || new Date().toLocaleDateString('vi-VN');
+    }
+    
+    // Cập nhật tên đại lý hiện tại
+    const currentAgentName = document.getElementById('currentAgentName');
+    if (currentAgentName && originalAgentData && originalAgentData.data) {
+      const fullname = originalAgentData.data['fullname'] || originalAgentData.data['TEN DAI LY'] || originalAgentData.data['AGEN NAME'] || 'Đại lý';
+      currentAgentName.textContent = fullname;
+    }
+  }
+  
+  // Hiển thị update date desktop cho chế độ nhập thủ công
+  const desktopUpdateDate = document.querySelector('.desktop-update-date');
+  if (desktopUpdateDate) {
+    desktopUpdateDate.style.display = 'block';
+    // Cập nhật text để phù hợp với chế độ thủ công
+    desktopUpdateDate.innerHTML = 'Ngày thực hiện tính: <span id="desktopUpdateDateText"></span>';
+    const desktopUpdateDateText = desktopUpdateDate.querySelector('span');
+    if (desktopUpdateDateText) {
+      const now = new Date();
+      desktopUpdateDateText.textContent = now.toLocaleDateString('vi-VN');
+    }
+  }
+}
+
+function showMobileAgentInfo() {
+  // Hiển thị thông tin đại lý trên mobile
+  const mobileAgentInfo = document.getElementById('mobileAgentInfo');
+  const mobileAgentInfoText = document.getElementById('mobileAgentInfoText');
+  const mobileAgentInfoButton = document.getElementById('mobileAgentInfoButton');
+  
+  if (!mobileAgentInfo || !mobileAgentInfoText || !mobileAgentInfoButton) return;
+  
+  // Kiểm tra xem có phải đăng nhập bình thường không (không phải mã đặc biệt)
+  const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+  
+  if (isNormalLogin) {
+    // Đăng nhập bình thường - hiển thị nút "Tính cho đại lý khác" (màu cam)
+    mobileAgentInfoText.innerHTML = `
+      <div>Bạn đang tính thu nhập cho<br>Đại lý chưa cấp code</div>
+      <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+        Ngày: ${getCurrentUpdateDate()}
+      </div>
+    `;
+    mobileAgentInfoButton.textContent = 'Tính cho đại lý khác';
+    mobileAgentInfoButton.className = 'mobile-agent-info-button special-login';
+    
+    // Event listener - gọi lại ô tìm kiếm
+    mobileAgentInfoButton.onclick = () => {
+      hideMainContent();
+      showAgentSearchBoxAgain();
+      console.log('Mobile: Called showAgentSearchBoxAgain from mobile agent info');
+      return false;
+    };
+  } else {
+    // Đăng nhập đặc biệt - hiển thị nút "Tính cho đại lý chưa có Code" (màu cam)
+    mobileAgentInfoText.innerHTML = `
+      <div>Bạn đang tính thu nhập cho<br>Đại lý chưa cấp code</div>
+      <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+        Ngày: ${getCurrentUpdateDate()}
+      </div>
+    `;
+    mobileAgentInfoButton.textContent = 'Tính cho đại lý chưa có Code';
+    mobileAgentInfoButton.className = 'mobile-agent-info-button special-login';
+    
+    // Event listener - sử dụng logic desktop
+    mobileAgentInfoButton.onclick = () => {
+      enableManualInputMode();
+      console.log('Mobile: Called enableManualInputMode from mobile button');
+      return false;
+    };
+  }
+  
+  // Hiển thị mobile agent info
+  mobileAgentInfo.style.display = 'block';
+  document.body.classList.add('has-agent-info');
+}
+
+function showMobileCalculatingAgentInfo() {
+  // Hiển thị thông tin đại lý đang tính trên mobile
+  const mobileAgentInfo = document.getElementById('mobileAgentInfo');
+  const mobileAgentInfoText = document.getElementById('mobileAgentInfoText');
+  const mobileAgentInfoButton = document.getElementById('mobileAgentInfoButton');
+  
+  if (!mobileAgentInfo || !mobileAgentInfoText || !mobileAgentInfoButton || !currentCalculatingAgent) return;
+  
+  // Xử lý chế độ nhập thủ công - sử dụng logic desktop
+  if (currentCalculatingAgent.isManualMode) {
+    showMobileManualModeInfo();
+    return;
+  }
+  
+  const agentName = currentCalculatingAgent.data["TEN DAI LY"];
+  const agentId = currentCalculatingAgent.id;
+  const updateDate = getUpdateDateFromData(currentCalculatingAgent.data);
+  
+  // Chỉ hiển thị thông tin mã và cập nhật cho code đặc biệt
+  const isSpecialCode = currentCalculatingAgent.isSpecialCode || currentSpecialUser;
+  
+  mobileAgentInfoText.innerHTML = `
+    <div><strong>${agentName}</strong></div>
+    ${isSpecialCode ? `<div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+      Mã: ${agentId} | Cập nhật: ${updateDate}
+    </div>` : ''}
+  `;
+  mobileAgentInfoButton.textContent = 'Tính cho đại lý khác';
+  mobileAgentInfoButton.className = 'mobile-agent-info-button special-login';
+  
+  // Event listener - sử dụng logic desktop
+  mobileAgentInfoButton.onclick = () => {
+    hideMainContent();
+    showAgentSearchBoxAgain();
+    console.log('Mobile: Called showAgentSearchBoxAgain from mobile button');
+    return false;
+  };
+  
+  // Hiển thị mobile agent info
+  mobileAgentInfo.style.display = 'block';
+  document.body.classList.add('has-agent-info');
+}
+
+function showMobileManualModeInfo() {
+  // Hiển thị thông tin chế độ thủ công trên mobile
+  const mobileAgentInfo = document.getElementById('mobileAgentInfo');
+  const mobileAgentInfoText = document.getElementById('mobileAgentInfoText');
+  const mobileAgentInfoButton = document.getElementById('mobileAgentInfoButton');
+  
+  if (!mobileAgentInfo || !mobileAgentInfoText || !mobileAgentInfoButton) return;
+  
+  // Kiểm tra xem có phải đăng nhập bình thường không (không phải mã đặc biệt)
+  const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+  
+  if (isNormalLogin) {
+    // Đăng nhập bình thường - hiển thị nút "Tính toán cho tôi" (màu xanh)
+    mobileAgentInfoText.innerHTML = `
+      <div>Bạn đang tính thu nhập cho<br>Đại lý chưa cấp code</div>
+      <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+        Ngày: ${getCurrentUpdateDate()}
+      </div>
+    `;
+    mobileAgentInfoButton.textContent = 'Tính toán cho tôi';
+    mobileAgentInfoButton.className = 'mobile-agent-info-button normal-login';
+    
+    // Event listener - sử dụng logic desktop
+    mobileAgentInfoButton.onclick = () => {
+      restoreOriginalAgentData();
+      console.log('Mobile: Restored to original agent data from manual mode');
+      return false;
+    };
+  } else {
+    // Đăng nhập đặc biệt - hiển thị nút "Tính cho đại lý khác" (màu cam)
+    mobileAgentInfoText.innerHTML = `
+      <div>Bạn đang tính thu nhập cho<br>Đại lý chưa cấp code</div>
+      <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+        Ngày: ${getCurrentUpdateDate()}
+      </div>
+    `;
+    mobileAgentInfoButton.textContent = 'Tính cho đại lý khác';
+    mobileAgentInfoButton.className = 'mobile-agent-info-button special-login';
+    
+    // Event listener - gọi lại cụm tìm kiếm
+    mobileAgentInfoButton.onclick = () => {
+      hideMainContent();
+      showAgentSearchBoxAgain();
+      console.log('Mobile: Called showAgentSearchBoxAgain from manual mode special user');
+      return false;
+    };
+  }
+  
+  // Hiển thị mobile agent info
+  mobileAgentInfo.style.display = 'block';
+  document.body.classList.add('has-agent-info');
+}
+
+function hideMobileAgentInfo() {
+  const mobileAgentInfo = document.getElementById('mobileAgentInfo');
+  if (mobileAgentInfo) {
+    mobileAgentInfo.style.display = 'none';
+    document.body.classList.remove('has-agent-info');
+  }
+}
+
+function showNormalLoginContainer() {
+  // Không hiển thị normalLoginContainer nữa
+  return;
+}
+
+function hideNormalLoginContainer() {
+  const normalLoginContainer = document.getElementById('normalLoginContainer');
+  if (normalLoginContainer) {
+    normalLoginContainer.style.display = 'none';
+    document.body.classList.remove('has-normal-login-container');
+  }
+}
+
+function showManualModeInfo() {
+  // Cập nhật thông tin đang xem trong sidebar cho chế độ nhập thủ công
+  const currentViewInfo = document.getElementById('currentViewInfo');
+  const currentViewText = document.getElementById('currentViewText');
+  
+  if (currentViewInfo && currentViewText) {
+    currentViewInfo.style.display = 'block';
+    // Đảm bảo sidebar hiển thị ngay lập tức
+    currentViewInfo.style.visibility = 'visible';
+    currentViewInfo.style.opacity = '1';
+    currentViewText.style.cssText = `
+      background: #f0f9ff;
+      color: #0b3d2c;
+      border-left-color: #0ea5e9;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+    `;
+    // Kiểm tra xem có phải đăng nhập bình thường không (không phải mã đặc biệt)
+    const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+    
+    let buttonHtml, buttonHandler;
+    
+    if (isNormalLogin) {
+      // Đăng nhập bình thường - hiển thị nút "Tính toán cho tôi" (màu xanh)
+      buttonHtml = `
+        <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+          Ngày thực hiện tính: <span id="sidebarUpdateDateManual">${getCurrentUpdateDate()}</span>
+        </div>
+        <div style="margin-top: 8px;">
+          <button 
+            id="calculateOtherAgentBtn" 
+            onclick="restoreOriginalAgentData(); console.log('Restored to original agent data from manual mode'); return false;"
+            style="width: 100%; height: 32px; background: #059669; color: #fff; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px;"
+          >
+            Tính toán cho tôi
+          </button>
+        </div>
+      `;
+      
+      buttonHandler = () => {
+        // Quay về chế độ ban đầu (khôi phục dữ liệu đại lý gốc)
+        restoreOriginalAgentData();
+        console.log('Restored to original agent data from manual mode');
+      };
+    } else {
+      // Đăng nhập đặc biệt - hiển thị nút "Tính cho đại lý khác" (màu cam)
+      buttonHtml = `
+        <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+          Ngày thực hiện tính: <span id="sidebarUpdateDateManual">${getCurrentUpdateDate()}</span>
+        </div>
+        <div style="margin-top: 8px;">
+          <button 
+            id="calculateOtherAgentBtn" 
+            onclick="hideMainContent(); showAgentSearchBoxAgain(); console.log('Called showAgentSearchBoxAgain from manual mode special user'); return false;"
+            style="width: 100%; height: 32px; background: #f59e0b; color: #fff; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px;"
+          >
+            Tính cho đại lý khác
+          </button>
+        </div>
+      `;
+      
+      buttonHandler = () => {
+        // Gọi lại cụm tìm kiếm
+        hideMainContent();
+        showAgentSearchBoxAgain();
+        console.log('Called showAgentSearchBoxAgain from manual mode special user');
+      };
+    }
+    
+    currentViewText.innerHTML = buttonHtml;
+  }
+  
+  // Ẩn thông tin trên mobile khi mới đăng nhập
+  hideMobileAgentInfo();
+}
+
+function showCalculatingAgentInfo() {
+  if (!currentCalculatingAgent) return;
+  
+  // Xử lý chế độ nhập thủ công
+  if (currentCalculatingAgent.isManualMode) {
+    showManualModeInfo();
+    return;
+  }
+  
+  const agentName = currentCalculatingAgent.data["TEN DAI LY"];
+  const agentId = currentCalculatingAgent.id;
+  
+  // Cập nhật thông tin đang xem trong sidebar
+  const currentViewInfo = document.getElementById('currentViewInfo');
+  const currentViewText = document.getElementById('currentViewText');
+  
+  if (currentViewInfo && currentViewText) {
+    currentViewInfo.style.display = 'block';
+    currentViewInfo.style.cssText = `
+      background: #fef3c7;
+      color: #92400e;
+      border-left-color: #f59e0b;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+    `;
+    // Lấy ngày cập nhật từ dữ liệu thực tế
+    const updateDate = getUpdateDateFromData(currentCalculatingAgent.data);
+    
+    // Chỉ hiển thị thông tin mã và cập nhật cho code đặc biệt
+    const isSpecialCode = currentCalculatingAgent.isSpecialCode || currentSpecialUser;
+    
+    currentViewText.innerHTML = `
+      Bạn đang tính thu nhập cho<br>
+      <strong>${agentName}</strong><br>
+      ${isSpecialCode ? `<small>Mã: ${agentId}</small>
+      <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+        Dữ liệu cập nhật đến ngày: <span id="sidebarUpdateDate">${updateDate}</span>
+      </div>` : ''}
+      <div style="margin-top: 8px;">
+        <button 
+          id="calculateOtherAgentBtn" 
+          onclick="hideMainContent(); showAgentSearchBoxAgain(); console.log('Called showAgentSearchBoxAgain from sidebar button'); return false;"
+          style="width: 100%; height: 32px; background: #f59e0b; color: #fff; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 12px;"
+        >
+          Tính cho đại lý khác
+        </button>
+      </div>
+    `;
+  }
+  
+  // Ẩn thông tin trên mobile khi mới đăng nhập
+  hideMobileAgentInfo();
 }
 
 /* ===== TOTAL (A) & D (A+B+C) ===== */
@@ -1012,6 +3982,266 @@ function updateCombinedTotals(){
   const elB=document.getElementById("tong-B"); if(elB) elB.value=formatMoney3(B);
   const elC=document.getElementById("tong-C"); if(elC) elC.value=formatMoney3(C);
   const elABC=document.getElementById("tong-ABC"); if(elABC) elABC.value=formatMoney3(A+B+C);
+
+  // ✅ Tính "Thưởng thêm khác"
+  computeExtraRewards();
+}
+
+// ✅ Tính "Thưởng thêm khác" trong tổng hợp
+function computeExtraRewards() {
+  const rewards = [];
+
+  // ✅ 5.1 Vé tham dự Ngày Doanh nhân 13/10
+  // Chỉ hiển thị câu thông báo điều kiện
+  rewards.push({ 
+    label: 'Vé tham dự Ngày Doanh nhân 13/10', 
+    value: 'Đạt vé nếu tháng này bạn có ít nhất 1 NRA với ≥ 16 triệu FYP' 
+  });
+
+  // ✅ 5.2 Bộ lịch 2026 (chỉ khi GĐ1 chọn Có)
+  const has16FYP_1to8Sep = document.getElementById('p1_has_16fyp_1to8Sep_yes').checked;
+  const expectedCCCount = parseInt(document.getElementById('expectedCCCount').value) || 0;
+  if (has16FYP_1to8Sep && expectedCCCount >= 1) {
+    rewards.push({
+      label: 'Thưởng Bộ lịch 2026',
+      value: expectedCCCount,
+    });
+  }
+
+  // ✅ 5.3 Vé bốc thăm iPhone 17
+  // Số phiếu thăm = min(số HĐ người nhập, số HĐ tối đa có thể tính thưởng)
+  function countRewardableContracts(giaiDoan) {
+    // Lấy số HĐ từ input của giai đoạn tương ứng
+    let soHDNhap = 0;
+    let tongFYP = 0;
+    
+    if (giaiDoan === 'gd1') {
+      soHDNhap = parseInt(document.getElementById('sohd-gd1').value) || 0;
+      tongFYP = parseMoney3(document.getElementById('fyp-gd1').value) || 0;
+    } else if (giaiDoan === 'gd2') {
+      soHDNhap = parseInt(document.getElementById('sohd-gd2').value) || 0;
+      tongFYP = parseMoney3(document.getElementById('fyp-gd2').value) || 0;
+    } else if (giaiDoan === 'gd3') {
+      soHDNhap = parseInt(document.getElementById('sohd-gd3').value) || 0;
+      tongFYP = parseMoney3(document.getElementById('fyp-gd3').value) || 0;
+    }
+    
+    // Tính số HĐ tối đa có thể tính thưởng
+    let m1, t1, m2, t2;
+    if (giaiDoan === 'gd1') {
+      m1 = 25000; t1 = 2500; m2 = 16000; t2 = 1500;
+    } else if (giaiDoan === 'gd2') {
+      m1 = 25000; t1 = 2000; m2 = 16000; t2 = 1000;
+    } else {
+      m1 = 25000; t1 = 1500; m2 = 16000; t2 = 750;
+    }
+    
+    const optU = optimizeMemo(tongFYP, Infinity, m1, t1, m2, t2);
+    const soHDToiDa = optU.used;
+    
+    // Lấy min(số nhập, số tối đa)
+    return Math.min(soHDNhap, soHDToiDa);
+  }
+  
+  const iphoneTickets =
+    countRewardableContracts('gd1') +
+    countRewardableContracts('gd2') +
+    countRewardableContracts('gd3');
+    
+  if (iphoneTickets > 0) {
+    rewards.push({ label: 'Thưởng vé bốc thăm iPhone 17', value: iphoneTickets });
+  }
+
+  // ✅ Lưu vào global variable để sử dụng trong render
+  window.extraRewards = rewards;
+  
+  // ✅ Render "Thưởng thêm khác" với thứ tự hiển thị
+  renderExtraRewards(rewards);
+}
+
+// ✅ Render "Thưởng thêm khác" và thứ tự hiển thị
+function renderExtraRewards(rewards) {
+  // Render cho tất cả 3 section: A2, A3, D
+  const sections = [
+    { section: 'extraRewardsSectionA2', list: 'extraRewardsListA2' },
+    { section: 'extraRewardsSectionA3', list: 'extraRewardsListA3' },
+    { section: 'extraRewardsSection', list: 'extraRewardsList' }
+  ];
+  
+  sections.forEach(({ section, list }) => {
+    const extraRewardsSection = document.getElementById(section);
+    const extraRewardsList = document.getElementById(list);
+    
+    if (!extraRewardsSection || !extraRewardsList) return;
+    
+    if (!rewards || rewards.length === 0) {
+      extraRewardsSection.style.display = 'none';
+      return;
+    }
+    
+    // Đảm bảo thứ tự: Doanh nhân → Lịch 2026 → iPhone 17
+    const sortedRewards = [
+      ...rewards.filter(r => r.label.includes('Ngày Doanh nhân')),
+      ...rewards.filter(r => r.label.includes('Bộ lịch 2026')),
+      ...rewards.filter(r => r.label.includes('iPhone 17')),
+    ];
+    
+    extraRewardsList.innerHTML = '';
+    sortedRewards.forEach((r, idx) => {
+      const li = document.createElement('li');
+      li.style.display = 'flex';
+      li.style.justifyContent = 'space-between';
+      li.style.padding = '12px 16px';
+      li.style.marginBottom = '8px';
+      li.style.background = '#f8fafc';
+      li.style.border = '1px solid #e2e8f0';
+      li.style.borderRadius = '8px';
+      li.style.fontSize = '16px';
+      
+      const labelSpan = document.createElement('span');
+      labelSpan.textContent = r.label;
+      labelSpan.style.color = '#0b3d2c';
+      labelSpan.style.fontWeight = '600';
+      
+      const valueSpan = document.createElement('span');
+      valueSpan.textContent = r.value;
+      valueSpan.style.fontWeight = '700';
+      valueSpan.style.color = '#059669';
+      valueSpan.style.fontSize = '16px';
+      
+      li.appendChild(labelSpan);
+      li.appendChild(valueSpan);
+      extraRewardsList.appendChild(li);
+    });
+    
+    extraRewardsSection.style.display = 'block';
+  });
+}
+
+// ✅ Setup form validation và event listeners
+function setupFormValidation() {
+  // Event listeners cho radio buttons đã được xóa
+  
+  // Event listeners cho radio buttons "Có hợp đồng 16tr FYP"
+  const has16FYPYes = document.getElementById('p1_has_16fyp_1to8Sep_yes');
+  const has16FYPNo = document.getElementById('p1_has_16fyp_1to8Sep_no');
+  const expectedCCContainer = document.getElementById('expectedCCContainer');
+  const expectedCCCount = document.getElementById('expectedCCCount');
+  
+  if (has16FYPYes && has16FYPNo && expectedCCContainer && expectedCCCount) {
+    has16FYPYes.addEventListener('change', () => {
+      if (has16FYPYes.checked) {
+        expectedCCContainer.style.display = 'block';
+        expectedCCCount.required = true;
+        // ✅ Cập nhật thưởng thêm khác
+        computeExtraRewards();
+      }
+    });
+    
+    has16FYPNo.addEventListener('change', () => {
+      if (has16FYPNo.checked) {
+        expectedCCContainer.style.display = 'none';
+        expectedCCCount.required = false;
+        expectedCCCount.value = '';
+        // ✅ Cập nhật thưởng thêm khác
+        computeExtraRewards();
+      }
+    });
+    
+    // Validation cho expectedCCCount
+    expectedCCCount.addEventListener('input', () => {
+      validateExpectedCCCount();
+      // ✅ Cập nhật thưởng thêm khác khi thay đổi số lượng CC
+      computeExtraRewards();
+    });
+    
+    expectedCCCount.addEventListener('blur', () => {
+      validateExpectedCCCount();
+      // ✅ Cập nhật thưởng thêm khác khi thay đổi số lượng CC
+      computeExtraRewards();
+    });
+    
+    // ✅ Cập nhật cảnh báo khi thay đổi số HĐ GĐ1
+    const sohdGd1 = document.getElementById('sohd-gd1');
+    if (sohdGd1) {
+      sohdGd1.addEventListener('input', () => {
+        validateExpectedCCCount();
+      });
+      sohdGd1.addEventListener('blur', () => {
+        validateExpectedCCCount();
+      });
+    }
+  }
+}
+
+// ✅ Validate form GĐ1 "Số lượng CC dự kiến"
+function validateExpectedCCCount() {
+  const has16FYPYes = document.getElementById('p1_has_16fyp_1to8Sep_yes');
+  const expectedCCCount = document.getElementById('expectedCCCount');
+  const sohdGd1 = document.getElementById('sohd-gd1');
+  const expectedCCWarning = document.getElementById('expectedCCWarning');
+  
+  if (!has16FYPYes || !expectedCCCount || !sohdGd1 || !expectedCCWarning) return;
+  
+  if (has16FYPYes.checked) {
+    const cc = parseInt(expectedCCCount.value) || 0;
+    const totalP1 = parseInt(sohdGd1.value) || 0;
+    
+    // Hiển thị cảnh báo ngay khi nhập nếu lớn hơn tổng GĐ1
+    if (totalP1 > 0 && cc > totalP1) {
+      expectedCCCount.setCustomValidity('');
+      expectedCCCount.style.borderColor = '#dc2626';
+      expectedCCWarning.textContent = `Bạn chỉ được nhập tối đa ${totalP1} CC`;
+      expectedCCWarning.style.display = 'block';
+    } else if (cc < 1 && cc > 0) {
+      expectedCCCount.setCustomValidity('Phải ≥ 1');
+      expectedCCCount.style.borderColor = '#dc2626';
+      expectedCCWarning.style.display = 'none';
+    } else {
+      expectedCCCount.setCustomValidity('');
+      expectedCCCount.style.borderColor = '#b7e7ce';
+      expectedCCWarning.style.display = 'none';
+    }
+  }
+}
+
+// ✅ Validate toàn bộ form
+function validateForm() {
+  const errors = {};
+  
+  // Validate Phase 1
+  const has16FYPYes = document.getElementById('p1_has_16fyp_1to8Sep_yes');
+  const expectedCCCount = document.getElementById('expectedCCCount');
+  const sohdGd1 = document.getElementById('sohd-gd1');
+  
+  if (has16FYPYes && has16FYPYes.checked) {
+    const cc = parseInt(expectedCCCount.value) || 0;
+    const totalP1 = parseInt(sohdGd1.value) || 0;
+    
+    if (!(cc >= 1 && cc <= totalP1)) {
+      errors.p1 = errors.p1 || {};
+      errors.p1.expectedCCCount = 'Phải ≥ 1 và ≤ tổng số HĐ của GĐ1';
+    }
+  }
+  
+  return errors;
+}
+
+// 🧪 Test function để xem "Thưởng thêm khác" hoạt động
+function testExtraRewards() {
+  const testRewards = [
+    { label: 'Vé tham dự Ngày Doanh nhân 13/10', value: 'Đạt' },
+    { label: 'Thưởng Bộ lịch 2026', value: 3 },
+    { label: 'Thưởng vé bốc thăm 17 iPhone 17', value: 2 }
+  ];
+  
+  // Lưu vào global variable
+  window.extraRewards = testRewards;
+  
+  // Render
+  renderExtraRewards(testRewards);
+  
+  console.log('🧪 Test Extra Rewards:', testRewards);
 }
 
 /* ===== INPUT MODES ===== */
@@ -1057,12 +4287,9 @@ function showSection(id){
   // 4) Cập nhật chiều cao header/toc để tính offset
   setLayoutVars();
 
-  // 5) CUỘN: luôn đưa đầu mục lên ngay dưới header + dropdown (trên điện thoại)
+  // 5) CUỘN: luôn đưa về đầu trang khi chuyển menu
   if(target){
-    const {h,t}=getOffsets();
-    const offset=h + t + 6; // 6px đệm
-    const y = target.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top: Math.max(0,y), behavior:'smooth' });
+    window.scrollTo({ top: 0, behavior:'smooth' });
   }
 }
 function bindSidebar(){
@@ -1080,38 +4307,372 @@ function buildMobileTOC(){
   sel.addEventListener('change',()=>{ showSection(sel.value); });
 }
 
+/* ===== TEST FUNCTIONS ===== */
+function testSearch() {
+  console.log('testSearch called');
+  searchForAgent();
+}
+
+function testInput() {
+  console.log('testInput called - triggered by:', event ? event.type : 'unknown');
+  
+  // Kiểm tra quyền CHUC DANH cho code thường
+  if (!currentSpecialUser && originalAgentData && originalAgentData.data) {
+    const chucDanh = originalAgentData.data["CHUC DANH"];
+    console.log('Checking CHUC DANH:', chucDanh);
+    
+    if (chucDanh !== "FA") {
+      alert('Chức năng dành cho quản lý sẽ sớm được cập nhật.');
+      return;
+    } else {
+      alert('Bạn chưa được cấp quyền để dùng chức năng này.');
+      return;
+    }
+  }
+  
+  const inputElement = document.getElementById('agentSearchInput');
+  console.log('Input element found:', !!inputElement);
+  
+  if (inputElement) {
+    console.log('Input value:', inputElement.value);
+    
+    // Nếu input trống, hiển thị thông báo yêu cầu nhập thông tin
+    if (!inputElement.value || inputElement.value.trim() === '') {
+      alert('Vui lòng nhập thông tin tìm kiếm');
+      inputElement.focus();
+      return;
+    }
+    
+    // Gọi searchForAgent với giá trị hiện tại
+    searchForAgent();
+  } else {
+    console.log('Input element not found');
+    alert('Không tìm thấy ô nhập liệu');
+  }
+}
+
+function testDirectSearch() {
+  console.log('testDirectSearch called');
+  const inputElement = document.getElementById('agentSearchInput');
+  if (inputElement && inputElement.value) {
+    console.log('Input has value:', inputElement.value);
+    searchForAgent();
+  } else {
+    console.log('Input is empty or not found');
+    alert('Input trống hoặc không tìm thấy!');
+  }
+}
+
+function testEnter() {
+  console.log('testEnter called - simulating Enter key');
+  const inputElement = document.getElementById('agentSearchInput');
+  if (inputElement) {
+    // Simulate Enter key press
+    const event = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true,
+      cancelable: true
+    });
+    inputElement.dispatchEvent(event);
+  }
+}
+
+// Make functions global for testing
+window.testSearch = testSearch;
+window.searchForAgent = searchForAgent;
+window.testInput = testInput;
+window.testDirectSearch = testDirectSearch;
+window.testEnter = testEnter;
+window.hideMainContent = hideMainContent;
+window.showAgentSearchBoxAgain = showAgentSearchBoxAgain;
+window.enableManualInputMode = enableManualInputMode;
+window.restoreOriginalAgentData = restoreOriginalAgentData;
+window.showMobileAgentInfo = showMobileAgentInfo;
+window.showMobileCalculatingAgentInfo = showMobileCalculatingAgentInfo;
+window.showMobileManualModeInfo = showMobileManualModeInfo;
+
+/* ===== SPECIAL LOGIN & PERMISSIONS ===== */
+function checkSpecialPermission(agentId) {
+  const permission = SPECIAL_PERMISSIONS[agentId];
+  if (!permission) return null;
+  
+  return {
+    ...permission,
+    agentId: agentId
+  };
+}
+
+function hasRegionAccess(agentRegion, userRegions) {
+  if (userRegions === 'ALL') return true;
+  if (!Array.isArray(userRegions)) return false;
+  
+  return userRegions.some(region => 
+    region.toLowerCase() === agentRegion.toLowerCase()
+  );
+}
+
+function findAgentInIncome(agentId) {
+  console.log('findAgentInIncome - agentId:', agentId);
+  console.log('findAgentInIncome - data length:', data.length);
+  
+  if (!data || data.length === 0) {
+    console.log('findAgentInIncome - data is empty or not loaded');
+    return null;
+  }
+  
+  // Debug: Kiểm tra record đầu tiên
+  if (data.length > 0) {
+    console.log('First record keys:', Object.keys(data[0]));
+    console.log('First record MA DAI LY:', data[0]["MA DAI LY"]);
+    console.log('getByKeyLoose result:', getByKeyLoose(data[0], "MA DAI LY"));
+  }
+  
+  // Thử tìm kiếm trực tiếp trước
+  const directSearch = data.find(r => {
+    const maDaiLy = r["MA DAI LY"];
+    const isMatch = eqAgent(maDaiLy, agentId);
+    if (isMatch) {
+      console.log('Direct search found match:', r);
+    }
+    return isMatch;
+  });
+  
+  if (directSearch) {
+    console.log('Direct search success:', directSearch);
+    return directSearch;
+  }
+  
+  // Nếu không tìm thấy, thử với getByKeyLoose
+  const found = data.find((r, index) => {
+    const maDaiLy = getByKeyLoose(r, "MA DAI LY");
+    const isMatch = eqAgent(maDaiLy, agentId);
+    
+    if (index < 5) { // Debug 5 record đầu
+      console.log(`Record ${index}:`, {
+        originalKey: r["MA DAI LY"],
+        getByKeyLoose: maDaiLy,
+        agentId: agentId,
+        isMatch: isMatch
+      });
+    }
+    
+    if (isMatch) {
+      console.log('findAgentInIncome - found match at index:', index, r);
+    }
+    return isMatch;
+  });
+  
+  console.log('findAgentInIncome - result:', found);
+  return found;
+}
+
+function findAgentInSM(agentId) {
+  return smData.find(r => eqAgent(getByKeyLoose(r, "MSDL"), agentId));
+}
+
 /* ===== SEARCH / LOGIN ===== */
 function searchAgent(){
   const idRaw=(document.getElementById("agent-id").value||'').trim();
   const ngayRaw=(document.getElementById("ngay-gia-nhap").value||'').trim();
-  if(!isDataReady){alert("Không tải được dữ liệu (income.json).");return}
+  if(!isDataReady){alert("Dữ liệu chưa sẵn sàng. Vui lòng thử lại sau.");return}
   if(!idRaw){alert("Vui lòng nhập Mã số đại lý");return}
   if(!ngayRaw){alert("Vui lòng nhập Ngày gia nhập");return}
+  
+  // Kiểm tra ngày gia nhập trước (áp dụng cho cả code thường và đặc biệt)
   const ngayKey=normalizeDateForCompare(ngayRaw); if(!ngayKey){alert("Ngày gia nhập không hợp lệ.");return}
+  
+  // Kiểm tra mã đặc biệt
+  const specialPermission = checkSpecialPermission(idRaw);
+  if (specialPermission) {
+    // Đăng nhập với mã đặc biệt - vẫn cần kiểm tra JOIN DATE trong sm.json
+    const smAgent = findAgentInSM(idRaw);
+    if (!smAgent) {
+      alert("Mã số đại lý không tồn tại trong hệ thống");
+      return;
+    }
+    
+    // Kiểm tra JOIN DATE có khớp không
+    const smJoinDate = getByKeyLoose(smAgent, "JOIN DATE");
+    if (!datesEqual(smJoinDate, ngayRaw)) {
+      alert("Ngày gia nhập không khớp với dữ liệu hệ thống");
+      return;
+    }
+    
+    currentSpecialUser = specialPermission;
+    performSpecialLogin(specialPermission);
+    return;
+  }
+  
+  // Đăng nhập thông thường
   if(/^\d{8}$/.test(ngayRaw)){const d=ngayRaw.slice(0,2),m=ngayRaw.slice(2,4),y=ngayRaw.slice(4,8); document.getElementById("ngay-gia-nhap").value=`${d}/${m}/${y}`;}
-  const same=data.filter(r=>eqAgent(getByKeyLoose(r,"Mã Đại lý"), idRaw));
-  const found=same.find(r=>datesEqual(getByKeyLoose(r,"Ngày gia nhập"), ngayRaw));
+  const same=data.filter(r=>eqAgent(getByKeyLoose(r,"MA DAI LY"), idRaw));
+  const found=same.find(r=>datesEqual(getByKeyLoose(r,"NGAY HIEU LUC HDDL"), ngayRaw));
   if(!found){alert("Đại lý không thuộc hệ thống");return}
 
-  document.getElementById("ho-ten").value=getByKeyLoose(found,"Tên Đại lý")||'';
-  document.getElementById("khu-vuc").value=getByKeyLoose(found,"Khu vực")||'';
-  document.getElementById("thang-lam-viec").value=Number(getByKeyLoose(found,"Số tháng làm việc")||0);
-  document.getElementById("nhom-dai-ly").value=getByKeyLoose(found,"Nhóm Đại lý")||'';
-  const p13=parseMoney3(getByKeyLoose(found,"TLDTHD cá nhân") ?? getByKeyLoose(found,"P13 cá nhân"));
+  // Hiển thị loading screen
+  showLoadingScreen();
+  
+  // Hiển thị banner chào mừng sau 1 giây
+  setTimeout(() => {
+    hideLoadingScreen();
+    
+    // Cập nhật tên trong banner
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) {
+      const hoTen = getByKeyLoose(found, "TEN DAI LY") || '';
+      const chucDanh = getByKeyLoose(found, "CHUC DANH") || '';
+      
+      // Chỉ hiển thị CHUC DANH + TEN DAI LY trên mobile với code thường
+      console.log('Debug banner:', { chucDanh, hoTen, windowWidth: window.innerWidth });
+      if (window.innerWidth <= 1023) {
+        welcomeName.textContent = `${chucDanh} ${hoTen}`.trim();
+        console.log('Mobile banner set to:', welcomeName.textContent);
+      } else {
+      welcomeName.textContent = hoTen;
+        console.log('Desktop banner set to:', welcomeName.textContent);
+      }
+    }
+    
+    // Hiển thị banner
+    const welcomeBanner = document.getElementById('welcomeBanner');
+    if (welcomeBanner) {
+      welcomeBanner.style.display = 'block';
+    }
+    
+    // Hiển thị mobile container
+    const mobileContainer = document.getElementById('mobileContainer');
+    if (mobileContainer) {
+      mobileContainer.style.display = 'block';
+      const mobileUpdateDateText = document.getElementById('mobileUpdateDateText');
+      if (mobileUpdateDateText) {
+        // Lấy ngày chốt từ cột "NGAY CHOT DU LIEU" trong income.json
+        const ngayChot = found["NGAY CHOT DU LIEU"];
+        
+        if (ngayChot) {
+          // Hiển thị ngày chốt từ dữ liệu thực tế
+          mobileUpdateDateText.textContent = ngayChot;
+        } else {
+          // Fallback: Lấy ngày cuối cùng của tháng liền trước (thực tế)
+          const now = new Date();
+          // Tính tháng liền trước (tháng hiện tại - 1)
+          let lastMonthYear = now.getFullYear();
+          let lastMonthMonth = now.getMonth() - 1;
+          
+          // Xử lý trường hợp tháng 1 (tháng 0)
+          if (lastMonthMonth < 0) {
+            lastMonthMonth = 11; // Tháng 12
+            lastMonthYear = now.getFullYear() - 1; // Năm trước
+          }
+          
+          // Lấy ngày cuối cùng của tháng liền trước
+          const lastDayOfLastMonth = new Date(lastMonthYear, lastMonthMonth + 1, 0);
+          mobileUpdateDateText.textContent = lastDayOfLastMonth.toLocaleDateString('vi-VN');
+        }
+      }
+    }
+    
+    // Hiển thị update date desktop
+    // Không cần hiển thị update date nữa
+  }, 1000);
+
+  document.getElementById("ho-ten").value=getByKeyLoose(found,"TEN DAI LY")||'';
+  document.getElementById("khu-vuc").value=getByKeyLoose(found,"KHU VUC")||'';
+  document.getElementById("thang-lam-viec").value=parseActiveValue(getByKeyLoose(found,"SO THANG LAM VIEC"));
+  // Cập nhật trường phân nhóm đại lý (có thể là input hoặc dropdown)
+  const nhomDaiLyValue = getByKeyLoose(found,"NHOM DAI LY")||'';
+  const manualDropdown = document.getElementById('nhom-dai-ly-dropdown');
+  if (manualDropdown) {
+    // Nếu đang ở chế độ thủ công với dropdown
+    manualDropdown.value = nhomDaiLyValue;
+  } else {
+    // Nếu là input thông thường
+    const inputField = document.getElementById('nhom-dai-ly');
+    if (inputField) {
+      inputField.value = nhomDaiLyValue;
+    }
+  }
+  const p13=parseActiveValue(getByKeyLoose(found,"TLDTHD CA NHAN") ?? getByKeyLoose(found,"P13 CA NHAN"));
   document.getElementById("p13-ca-nhan").value=Number.isFinite(p13)&&p13!==0?p13:'';
   document.getElementById("he-so-thuong").value=getHeSoThuong(p13);
-  document.getElementById("mdrt-fyp").value=formatMoney3(parseMoney3(getByKeyLoose(found,"MDRT-FYP tới hiện tại")));
-  const fycT1=parseMoney3(getByKeyLoose(found,"FYC tháng T-1"));
-  const fycT2=parseMoney3(getByKeyLoose(found,"FYC tháng T-2"));
+  document.getElementById("mdrt-fyp").value=formatMoney3(parseActiveValue(getByKeyLoose(found,"MDRT-FYP TOI HIEN TAI")));
+  const fycT1=parseActiveValue(getByKeyLoose(found,"FYC THANG T-1"));
+  const fycT2=parseActiveValue(getByKeyLoose(found,"FYC THANG T-2"));
   document.getElementById("tong-fyc").value=formatMoney3(fycT1+fycT2);
-  document.getElementById("tong-fyc-quy").value=formatMoney3(parseMoney3(getByKeyLoose(found,"Tổng FYC trong Qúy hiện tại")));
-  document.getElementById("active-months").value=String(getByKeyLoose(found,"Active months")||'').toString().trim();
+  document.getElementById("tong-fyc-quy").value=formatMoney3(parseActiveValue(getByKeyLoose(found,"TONG FYC TRONG QUY HIEN TAI")));
+  // Tính số tháng có hoạt động trong quý dựa trên tháng hiện tại
+  // Logic: T là tháng hiện tại, suy ra T-1 và T-2 theo quý
+  const currentMonth = new Date().getMonth() + 1; // Tháng hiện tại (1-12)
+  
+  // Xác định quý hiện tại và các tháng cần xét
+  let month1, month2, month3;
+  
+  if (currentMonth >= 1 && currentMonth <= 3) {
+    // Quý 1: tháng 1, 2, 3
+    month1 = 1; month2 = 2; month3 = 3;
+  } else if (currentMonth >= 4 && currentMonth <= 6) {
+    // Quý 2: tháng 4, 5, 6
+    month1 = 4; month2 = 5; month3 = 6;
+  } else if (currentMonth >= 7 && currentMonth <= 9) {
+    // Quý 3: tháng 7, 8, 9
+    month1 = 7; month2 = 8; month3 = 9;
+  } else {
+    // Quý 4: tháng 10, 11, 12
+    month1 = 10; month2 = 11; month3 = 12;
+  }
+  
+  // Gán giá trị cho Active T, T-1, T-2 dựa trên tháng hiện tại
+  let activeT, activeT1, activeT2;
+  
+  if (currentMonth === month1) {
+    // Tháng đầu quý: chỉ xét tháng hiện tại
+    activeT = getByKeyLoose(found, "HOAT DONG THANG T");
+    activeT1 = 0; activeT2 = 0;
+  } else if (currentMonth === month2) {
+    // Tháng giữa quý: xét 2 tháng đầu quý
+    activeT = getByKeyLoose(found, "HOAT DONG THANG T");
+    activeT1 = getByKeyLoose(found, "HOAT DONG THANG T-1");
+    activeT2 = 0;
+  } else {
+    // Tháng cuối quý: xét cả 3 tháng của quý
+    activeT = getByKeyLoose(found, "HOAT DONG THANG T");
+    activeT1 = getByKeyLoose(found, "HOAT DONG THANG T-1");
+    activeT2 = getByKeyLoose(found, "HOAT DONG THANG T-2");
+  }
+  
+
+  
+  const activeTNum = parseActiveValue(activeT);
+  const activeT1Num = parseActiveValue(activeT1);
+  const activeT2Num = parseActiveValue(activeT2);
+  
+  // Đếm số tháng có hoạt động (giá trị > 0)
+  let activeMonthsCount = 0;
+  if (activeTNum > 0) activeMonthsCount++;
+  if (activeT1Num > 0) activeMonthsCount++;
+  if (activeT2Num > 0) activeMonthsCount++;
+  
+  document.getElementById("active-months").value = activeMonthsCount.toString();
 
   ["sohd-gd1","sohd-gd2","sohd-gd3","fypchinh-gd1","fypchinh-gd2","fypchinh-gd3","fypkem-gd1","fypkem-gd2","fypkem-gd3"].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
   sanitizeAllNumericInputs(); 
   updateTongHop(); // updateTongHop() đã bao gồm tất cả các hàm tính thưởng
   calculateTongThuNhap(); // Tính tổng thu nhập cuối cùng
   syncReadonlyTitles();
+
+  // Lưu thông tin đại lý gốc để có thể khôi phục sau này
+  originalAgentData = { id: idRaw, data: found };
+  
+  // Thiết lập thông tin đại lý đang tính
+  currentCalculatingAgent = { id: idRaw, data: found };
+  
+  // Hiển thị container cho đăng nhập bình thường
+  showNormalLoginContainer();
+  
+  // Hiển thị thông tin đại lý trong sidebar
+  showCalculatingAgentInfo();
 
   isLoggedIn=true;
   // Bật giao diện sau đăng nhập
@@ -1164,6 +4725,11 @@ function applySidebarMode(){
 function calculateIncome(){
   console.log('=== calculateIncome START ===');
   
+  // Kiểm tra chế độ nhập thủ công
+  if (currentCalculatingAgent && currentCalculatingAgent.isManualMode) {
+    console.log('Manual input mode - calculations based on manual input');
+  }
+  
   // 1. CHUYỂN ĐỔI DỮ LIỆU VỀ SỐ TRƯỚC KHI TÍNH
   const tongFYP = parseMoney3(document.getElementById('tong-fyp').value) || 0;
   const chinh = parseMoney3(document.getElementById('fyp-chinh').value) || 0;
@@ -1213,6 +4779,21 @@ function calculateIncome(){
   console.log('=== calculateIncome END ===');
 }
 
+/* ===== LOADING SCREEN FUNCTIONS ===== */
+function showLoadingScreen() {
+  const loadingScreen = document.getElementById('loadingScreen');
+  if (loadingScreen) {
+    loadingScreen.style.display = 'flex';
+  }
+}
+
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById('loadingScreen');
+  if (loadingScreen) {
+    loadingScreen.style.display = 'none';
+  }
+}
+
 /* ===== TEST FUNCTIONS ===== */
 function testCalculations() {
   console.log('=== TESTING CALCULATIONS ===');
@@ -1244,8 +4825,8 @@ function testCalculations() {
     const testRow = nst6[0];
     console.log('getByKeyLoose test with nst6[0]:', {
       original: testRow,
-      'FYC trong 3 tháng gần nhất': getByKeyLoose(testRow, 'FYC trong 3 tháng gần nhất'),
-      '% Tỷ lệ thưởng năng suất tháng': getByKeyLoose(testRow, '% Tỷ lệ thưởng năng suất tháng')
+      'FYC TRONG 3 THANG GAN NHAT': getByKeyLoose(testRow, 'FYC TRONG 3 THANG GAN NHAT'),
+      '% TY LE THUONG NANG SUAT THANG': getByKeyLoose(testRow, '% TY LE THUONG NANG SUAT THANG')
     });
   } else {
     console.log('nst6 is empty or not loaded');
@@ -1279,7 +4860,7 @@ window.addEventListener('load', async ()=>{
   
   populateMonthSelect(); sanitizeAllNumericInputs(); autoFormatInputs();
   enableEnterToCalc(); setLayoutVars(); applySidebarMode();
-  window.addEventListener('resize', ()=>{ setLayoutVars(); applySidebarMode(); });
+  window.addEventListener('resize', ()=>{ setLayoutVars(); applySidebarMode(); updateBannerForMobile(); });
 
   // Chuẩn hoá nhập ngày
   const ngay=document.getElementById("ngay-gia-nhap");
@@ -1289,8 +4870,167 @@ window.addEventListener('load', async ()=>{
     ngay.addEventListener("keydown",e=>{if(e.key==="Enter")searchAgent()});
   }
 
+  // Form submit event
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      searchAgent();
+    });
+  }
+  
+  // Thêm class mobile cho body nếu cần
+  if (window.matchMedia('(max-width: 1023px)').matches) {
+    document.body.classList.add('mobile');
+  }
+  
+  // Mobile menu event listeners
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileCalculateOtherBtn = document.getElementById('mobileCalculateOtherBtn');
+  const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  const mobileMenuDropdown = document.getElementById('mobileMenuDropdown');
+  
+  if (mobileMenuBtn) {
+    mobileMenuBtn.onclick = () => {
+      mobileMenuDropdown.style.display = mobileMenuDropdown.style.display === 'none' ? 'block' : 'none';
+      return false;
+    };
+  }
+  if (mobileCalculateOtherBtn) {
+    mobileCalculateOtherBtn.onclick = () => {
+      // Kiểm tra xem có phải đăng nhập bình thường không
+      const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+      
+      if (isNormalLogin) {
+        // Đăng nhập bình thường: gọi cụm tìm kiếm và thay đổi nút
+        hideMainContent();
+        showAgentSearchBoxAgain();
+        
+        // Thay đổi nút trong TOC thành "Tính cho tôi" màu xanh lá
+        mobileCalculateOtherBtn.textContent = 'Tính cho tôi';
+        mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn normal-login';
+        mobileCalculateOtherBtn.style.background = '#059669';
+        mobileCalculateOtherBtn.style.borderColor = '#059669';
+        
+        // Thay đổi chức năng nút
+        mobileCalculateOtherBtn.onclick = () => {
+          restoreOriginalAgentData();
+          
+          // Thay đổi nút trở lại "Tính cho đại lý khác" sau khi restore
+          mobileCalculateOtherBtn.textContent = 'Tính cho đại lý khác';
+          mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn';
+          mobileCalculateOtherBtn.style.background = '#f59e0b';
+          mobileCalculateOtherBtn.style.borderColor = '#f59e0b';
+          
+          // Thay đổi chức năng nút trở lại gọi search
+          mobileCalculateOtherBtn.onclick = () => {
+            // Kiểm tra xem có phải đăng nhập bình thường không
+            const isNormalLogin = !currentSpecialUser && originalAgentData && originalAgentData.data;
+            
+            if (isNormalLogin) {
+              // Đăng nhập bình thường: gọi cụm tìm kiếm và thay đổi nút
+              hideMainContent();
+              showAgentSearchBoxAgain();
+              
+              // Thay đổi nút trong TOC thành "Tính cho tôi" màu xanh lá
+              mobileCalculateOtherBtn.textContent = 'Tính cho tôi';
+              mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn normal-login';
+              mobileCalculateOtherBtn.style.background = '#059669';
+              mobileCalculateOtherBtn.style.borderColor = '#059669';
+              
+              // Thay đổi chức năng nút
+              mobileCalculateOtherBtn.onclick = () => {
+                restoreOriginalAgentData();
+                
+                // Thay đổi nút trở lại "Tính cho đại lý khác" sau khi restore
+                mobileCalculateOtherBtn.textContent = 'Tính cho đại lý khác';
+                mobileCalculateOtherBtn.className = 'mobile-calculate-other-btn';
+                mobileCalculateOtherBtn.style.background = '#f59e0b';
+                mobileCalculateOtherBtn.style.borderColor = '#f59e0b';
+                
+                console.log('Mobile: Restored to original agent data from TOC button');
+                return false;
+              };
+              
+              console.log('Mobile: Called showAgentSearchBoxAgain and changed button to "Tính cho tôi"');
+            } else {
+              // Code đặc biệt: gọi cụm tìm kiếm bình thường
+              hideMainContent();
+              showAgentSearchBoxAgain();
+              console.log('Mobile: Called showAgentSearchBoxAgain from mobile TOC button');
+            }
+            
+            return false;
+          };
+          
+          console.log('Mobile: Restored to original agent data from TOC button');
+          return false;
+        };
+        
+        console.log('Mobile: Called showAgentSearchBoxAgain and changed button to "Tính cho tôi"');
+      } else {
+        // Code đặc biệt: gọi cụm tìm kiếm bình thường
+        hideMainContent();
+        showAgentSearchBoxAgain();
+        console.log('Mobile: Called showAgentSearchBoxAgain from mobile TOC button');
+      }
+      
+      return false;
+    };
+  }
+  
+  if (mobileLogoutBtn) {
+    mobileLogoutBtn.onclick = () => {
+      location.reload();
+      return false;
+    };
+  }
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!mobileMenuBtn?.contains(e.target) && !mobileMenuDropdown?.contains(e.target)) {
+      if (mobileMenuDropdown) {
+        mobileMenuDropdown.style.display = 'none';
+      }
+    }
+  });
+  
+  // Function để hiển thị lại container tìm kiếm đại lý
+  window.showAgentSearchAgain = function() {
+    console.log('showAgentSearchAgain called');
+    
+    // Ẩn mobile container
+    const mobileContainer = document.getElementById('mobileContainer');
+    if (mobileContainer) {
+      mobileContainer.style.display = 'none';
+    }
+    
+    // Hiển thị lại agent search container
+    showAgentSearchBox();
+    
+    // Ẩn nội dung chính
+    hideMainContent();
+  };
+  
+  // Mobile menu item click handlers
+  document.querySelectorAll('.mobile-menu-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = item.getAttribute('data-target');
+      if (target) {
+        showSection(target);
+        if (mobileMenuDropdown) {
+          mobileMenuDropdown.style.display = 'none';
+        }
+      }
+    });
+  });
+
   // Sidebar click
   bindSidebar();
+
+  // ✅ Event listeners cho radio buttons và validation
+  setupFormValidation();
 
   // Mặc định ẩn tất cả section khi chưa login
   document.querySelectorAll('.app-section').forEach(s=>s.style.display='none');
@@ -1298,4 +5038,3 @@ window.addEventListener('load', async ()=>{
   </script>
 </body>
 </html>
-  
